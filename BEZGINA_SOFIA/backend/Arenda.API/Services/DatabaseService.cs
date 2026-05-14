@@ -11,7 +11,9 @@ namespace Arenda.API.Services
 
         public DatabaseService(IConfiguration config)
         {
-            _connectionString = config.GetConnectionString("DefaultConnection");
+            _connectionString = Environment.GetEnvironmentVariable("ARENDA_DB_CONNECTION")
+                ?? config.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Не настроена строка подключения к базе данных");
             _dataAccess = new DataDBeaver(_connectionString);  
         }
 
