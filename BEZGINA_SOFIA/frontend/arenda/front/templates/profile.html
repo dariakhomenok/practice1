@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arenda | Профиль</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* --- ПАЛИТРА (Tangaroa + Firebrick) --- */
+        :root {
+            --tangaroa: #0D2744;
+            --wedgewood: #53728A;
+            --shipcove: #7691AD;
+            --spindle: #B9CFDD;
+            --firebrick: #FF929A;
+            --firebrick-hover: #e07a83;
+            --white: #FFFFFF;
+            --text-dark: #1a2a3a;
+            --text-light: #6a7f8f;
+            --shadow-sm: 0 8px 20px rgba(13, 39, 68, 0.06);
+            --shadow-md: 0 12px 28px rgba(13, 39, 68, 0.1);
+            --shadow-lg: 0 20px 35px -10px rgba(13, 39, 68, 0.15);
+            --gradient-fire: linear-gradient(135deg, #FF929A 0%, #f07a83 100%);
+            --gradient-blue: linear-gradient(135deg, #0D2744 0%, #53728A 100%);
+            
+            /* Светлая тема */
+            --bg-body: #B9CFDD;
+            --bg-gradient-start: #d4e5f0;
+            --bg-gradient-mid: #B9CFDD;
+            --bg-gradient-end: #a8c0ce;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 146, 154, 0.25);
+            --text-primary: #1a2a3a;
+            --text-secondary: #6a7f8f;
+            --input-bg: #f9fafb;
+            --input-border: #e5e7eb;
+            --input-focus: #FF929A;
+            --role-bg: #f3f4f6;
+            --role-active-bg: #FFFFFF;
+            --role-active-text: #0D2744;
+            --role-inactive-text: #6a7f8f;
+            --tab-bg: transparent;
+            --tab-active-bg: #f3f4f6;
+            --tab-active-text: #0D2744;
+            --sun-icon-color: #B9CFDD;
+            --moon-icon-color: #B9CFDD;
+            --header-bg: rgba(13, 39, 68, 0.85);
+            --header-text: rgba(185, 207, 221, 0.9);
+            --header-border: rgba(255, 255, 255, 0.1);
+            --stat-value: #1a2a3a;
+            --avatar-bg: linear-gradient(135deg, #0D2744 0%, #53728A 100%);
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #B9CFDD 100%);
+        }
+        
+        /* Тёмная тема */
+        body.dark {
+            --bg-body: #0D2744;
+            --bg-gradient-start: #1a3a5a;
+            --bg-gradient-mid: #0D2744;
+            --bg-gradient-end: #06152a;
+            --card-bg: rgba(58, 90, 122, 0.95);
+            --card-border: rgba(255, 146, 154, 0.35);
+            --text-primary: #FFFFFF;
+            --text-secondary: #c0d0e0;
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.2);
+            --input-focus: #FF929A;
+            --role-bg: rgba(255, 255, 255, 0.1);
+            --role-active-bg: #FF929A;
+            --role-active-text: #0D2744;
+            --role-inactive-text: #c0d0e0;
+            --tab-bg: transparent;
+            --tab-active-bg: rgba(255, 146, 154, 0.2);
+            --tab-active-text: #FF929A;
+            --sun-icon-color: #0D2744;
+            --moon-icon-color: #0D2744;
+            --header-bg: rgba(185, 207, 221, 0.95);
+            --header-text: #0D2744;
+            --header-border: rgba(13, 39, 68, 0.15);
+            --stat-value: #FFFFFF;
+            --avatar-bg: linear-gradient(135deg, #FF929A 0%, #0D2744 100%);
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #0D2744 100%);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+        
+        /* --- ЖИВОЙ ФОН --- */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 40%, var(--bg-gradient-end) 100%);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-1 {
+            position: fixed;
+            top: -150px;
+            right: -100px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.25) 0%, rgba(255, 146, 154, 0.05) 60%, rgba(255, 146, 154, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 18s ease-in-out infinite;
+        }
+        
+        .bg-circle-2 {
+            position: fixed;
+            bottom: -120px;
+            left: -80px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(13, 39, 68, 0.15) 0%, rgba(13, 39, 68, 0.05) 60%, rgba(13, 39, 68, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float2 22s ease-in-out infinite;
+        }
+        
+        .bg-circle-3 {
+            position: fixed;
+            top: 40%;
+            left: -50px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(83, 114, 138, 0.2) 0%, rgba(83, 114, 138, 0.05) 60%, rgba(83, 114, 138, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float3 15s ease-in-out infinite;
+        }
+        
+        .bg-circle-4 {
+            position: fixed;
+            bottom: 20%;
+            right: 15%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.2) 0%, rgba(255, 146, 154, 0.02) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 25s ease-in-out infinite reverse;
+        }
+        
+        .bg-blob {
+            position: fixed;
+            bottom: 5%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.15) 0%, rgba(255, 146, 154, 0) 70%);
+            border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%;
+            z-index: 0;
+            animation: morph 15s ease-in-out infinite;
+        }
+        
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+        
+        .bg-grid-diagonal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(45deg, rgba(13, 39, 68, 0.05) 0px, rgba(13, 39, 68, 0.05) 1px, transparent 1px, transparent 30px);
+            z-index: 0;
+        }
+        
+        body.dark .bg-grid {
+            background-image: 
+                linear-gradient(rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px);
+        }
+        
+        body.dark .bg-grid-diagonal {
+            background-image: repeating-linear-gradient(45deg, rgba(185, 207, 221, 0.08) 0px, rgba(185, 207, 221, 0.08) 1px, transparent 1px, transparent 30px);
+        }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -20px) scale(1.05); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.08); }
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 40px); }
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%; }
+            50% { border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%; }
+        }
+        
+        /* --- ШАПКА (НЕ ФИКСИРОВАННАЯ, двигается со страницей) --- */
+        .header {
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 80px;
+            padding: 10px 30px;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--header-border);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo { 
+            font-size: 28px; 
+            font-weight: 800; 
+            background: var(--logo-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav { display: flex; gap: 20px; align-items: center; }
+        .nav a { color: var(--header-text); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+        .nav a:hover { color: var(--firebrick); }
+        
+        /* --- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ --- */
+        .theme-switch {
+            display: flex;
+            gap: 4px;
+            background: rgba(13, 39, 68, 0.15);
+            border-radius: 60px;
+            padding: 4px;
+        }
+        
+        body.dark .theme-switch {
+            background: rgba(185, 207, 221, 0.2);
+        }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+        }
+        
+        .theme-btn.light { color: var(--sun-icon-color); background: transparent; }
+        .theme-btn.dark { color: var(--moon-icon-color); background: transparent; }
+        .theme-btn.light.active { background: var(--gradient-fire); color: #0D2744; }
+        .theme-btn.dark.active { background: var(--gradient-fire); color: #0D2744; }
+        
+        /* --- ОСНОВНОЙ КОНТЕЙНЕР (без лишних отступов) --- */
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* --- КАРТОЧКА ПРОФИЛЯ --- */
+        .profile-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            padding: 40px;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+        
+        .role-badge {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            background: var(--role-bg);
+            padding: 6px;
+            border-radius: 60px;
+            max-width: 300px;
+        }
+        
+        .role-option {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            cursor: default;
+        }
+        
+        .role-option.tenant-active { background: var(--role-active-bg); color: var(--role-active-text); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .role-option.landlord-active { background: var(--role-active-bg); color: var(--role-active-text); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        
+        .profile-main {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .avatar-section {
+            flex: 0 0 120px;
+            text-align: center;
+        }
+        
+        .avatar {
+            width: 120px;
+            height: 120px;
+            background: var(--avatar-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            color: white;
+            font-size: 48px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2);
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .avatar-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .change-photo-btn, .delete-photo-btn {
+            background: none;
+            border: 2px solid var(--input-border);
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+        
+        .change-photo-btn:hover { border-color: var(--firebrick); color: var(--firebrick); }
+        .delete-photo-btn:hover { border-color: #dc2626; color: #dc2626; background: rgba(220,38,38,0.1); }
+        
+        .quick-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .quick-info h3 { color: var(--text-primary); font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .quick-info .user-role { color: var(--firebrick); font-weight: 600; font-size: 16px; margin-bottom: 12px; }
+        
+        .user-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+        .stat-item { text-align: center; min-width: 100px; }
+        .stat-value { font-size: 24px; font-weight: 700; color: var(--stat-value); }
+        .stat-label { font-size: 13px; color: var(--text-secondary); }
+        
+        .action-buttons-role {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .role-action-btn {
+            flex: 1;
+            padding: 14px 20px;
+            background: var(--gradient-fire);
+            border: none;
+            border-radius: 60px;
+            color: #0D2744;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 146, 154, 0.3);
+        }
+        
+        .role-action-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255, 146, 154, 0.5); }
+        
+        .profile-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--tab-bg);
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn:hover { color: var(--firebrick); background: rgba(255,146,154,0.1); }
+        .tab-btn.active { color: var(--tab-active-text); background: var(--tab-active-bg); }
+        
+        .profile-section { display: none; margin-bottom: 32px; }
+        .profile-section.active { display: block; }
+        
+        .section-title {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--card-border);
+        }
+        
+        .two-columns { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px; }
+        .input-field { margin-bottom: 20px; }
+        .input-field label { display: block; color: var(--text-primary); font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+        .input-field input, .input-field select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 16px;
+            font-size: 15px;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .input-field input:focus, .input-field select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            background: var(--card-bg);
+        }
+        .input-field input:disabled, .input-field select:disabled { opacity: 0.7; cursor: not-allowed; }
+        
+        .edit-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: var(--gradient-fire);
+            border: none;
+            border-radius: 60px;
+            color: #0D2744;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .edit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,146,154,0.4); }
+        
+        .save-btn, .cancel-edit-btn { padding: 12px 24px; border: none; border-radius: 60px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .save-btn { background: var(--gradient-fire); color: #0D2744; }
+        .cancel-edit-btn { background: var(--input-border); color: var(--text-secondary); }
+        .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
+        
+        .dot-pattern { display: flex; gap: 4px; justify-content: center; margin-top: 32px; }
+        .dot { width: 4px; height: 4px; background: var(--text-secondary); border-radius: 50%; opacity: 0.5; }
+        
+        /* Модальное окно */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 32px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-content h3 { margin-bottom: 16px; color: var(--text-primary); }
+        .modal-content .warning {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--card-border);
+        }
+        .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 60px; border: none; font-weight: 600; cursor: pointer; }
+        .modal-btn.confirm { background: var(--gradient-fire); color: #0D2744; }
+        .modal-btn.cancel { background: var(--input-border); color: var(--text-secondary); }
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 16px;
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        .modal-input:focus { outline: none; border-color: var(--input-focus); }
+        
+        @media (max-width: 768px) {
+            .profile-card { padding: 30px 20px; }
+            .two-columns { grid-template-columns: 1fr; }
+            .profile-main { flex-direction: column; align-items: center; text-align: center; }
+            .user-stats { justify-content: center; }
+            .action-buttons-role { flex-direction: column; }
+            .header { padding: 8px 20px; margin-bottom: 20px; }
+            .right-section { gap: 10px; }
+            .nav a { margin-right: 12px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+    <div class="bg-circle-3"></div>
+    <div class="bg-circle-4"></div>
+    <div class="bg-blob"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-grid-diagonal"></div>
+    
+    <div class="header">
+        <a href="/" class="logo">✦ Arenda</a>
+        <div class="right-section">
+            <div class="nav" id="nav"></div>
+            <div class="theme-switch">
+                <button class="theme-btn light active" id="lightModeBtn">☼</button>
+                <button class="theme-btn dark" id="darkModeBtn">☽</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="profile-card">
+            <div class="role-badge">
+                <button class="role-option" id="tenantRoleBtn" disabled>Арендатор</button>
+                <button class="role-option" id="landlordRoleBtn" disabled>Арендодатель</button>
+            </div>
+
+            <div id="roleActions" class="action-buttons-role"></div>
+
+            <div class="profile-main">
+                <div class="avatar-section">
+                    <div class="avatar" id="avatar">--</div>
+                    <div class="avatar-buttons">
+                        <button class="change-photo-btn" id="changePhotoBtn">📸 Изменить</button>
+                        <button class="delete-photo-btn" id="deletePhotoBtn">🗑️ Удалить</button>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                </div>
+                <div class="quick-info">
+                    <h3 id="userName">Загрузка...</h3>
+                    <div class="user-role" id="userRoleDisplay">Загрузка...</div>
+                    <div id="userStats" class="user-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="bookingsCount">0</div>
+                            <div class="stat-label">Бронирований</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="reviewsCount">0</div>
+                            <div class="stat-label">Отзывов</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-tabs">
+                <button class="tab-btn active" data-tab="personal">Личные данные</button>
+                <button class="tab-btn" data-tab="settings">Настройки</button>
+            </div>
+
+            <div class="profile-section active" id="personal-section">
+                <h3 class="section-title">Личная информация</h3>
+                <div class="two-columns">
+                    <div class="input-field"><label>Имя</label><input type="text" id="firstName" placeholder="Имя" disabled></div>
+                    <div class="input-field"><label>Фамилия</label><input type="text" id="lastName" placeholder="Фамилия" disabled></div>
+                </div>
+                <div class="input-field"><label>Отчество</label><input type="text" id="patronymic" placeholder="Отчество" disabled></div>
+                <div class="two-columns">
+                    <div class="input-field"><label>Телефон</label><input type="tel" id="phone" placeholder="+7 (___) ___ __ __" disabled></div>
+                    <div class="input-field"><label>Email</label><input type="email" id="email" placeholder="email@example.com" disabled></div>
+                </div>
+                <div class="input-field"><label>Дата рождения</label><input type="date" id="birthday" disabled></div>
+                <div id="editButtons" style="display: none;" class="action-buttons">
+                    <button class="save-btn" id="saveProfileBtn">💾 Сохранить</button>
+                    <button class="cancel-edit-btn" id="cancelEditBtn">Отмена</button>
+                </div>
+                <button class="edit-btn" id="enableEditBtn">✏️ Редактировать профиль</button>
+            </div>
+
+            <div class="profile-section" id="settings-section">
+                <h3 class="section-title">Настройки профиля</h3>
+                <div class="input-field">
+                    <label>Язык интерфейса</label>
+                    <select id="language" disabled>
+                        <option value="ru">Русский</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label>Уведомления</label>
+                    <select id="notifications" disabled>
+                        <option value="all">Все уведомления</option>
+                        <option value="important">Только важные</option>
+                        <option value="none">Отключить</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label>Сменить пароль</label>
+                    <button class="edit-btn" id="changePasswordBtn" style="margin-top: 0; width: 100%;">🔐 Сменить пароль</button>
+                </div>
+            </div>
+
+            <div class="dot-pattern"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        </div>
+    </div>
+
+    <script>
+        // --- ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ---
+        const lightModeBtn = document.getElementById('lightModeBtn');
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        
+        function updateThemeButtons(theme) {
+            if (theme === 'dark') {
+                lightModeBtn.classList.remove('active');
+                darkModeBtn.classList.add('active');
+            } else {
+                lightModeBtn.classList.add('active');
+                darkModeBtn.classList.remove('active');
+            }
+        }
+        
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThemeButtons('dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThemeButtons('light');
+            }
+        }
+        
+        lightModeBtn.addEventListener('click', () => setTheme('light'));
+        darkModeBtn.addEventListener('click', () => setTheme('dark'));
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            updateThemeButtons('dark');
+        } else {
+            updateThemeButtons('light');
+        }
+        
+        const API_URL = 'https://localhost:7151/api';
+        const BACKEND_URL = 'https://localhost:7151';
+        
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const userName = localStorage.getItem('userName');
+        const isLandlord = localStorage.getItem('isLandlord') === 'true';
+
+        if (!token || !userId) window.location.href = '/login/';
+
+        // --- ШАПКА ---
+        function renderNav() {
+            const nav = document.getElementById('nav');
+            const token = localStorage.getItem('token');
+            const userName = localStorage.getItem('userName');
+            
+            if (token && userName) {
+                nav.innerHTML = `
+                    <a href="/">Поиск</a>
+                    <a href="/profile/" class="profile-link" style="color: var(--header-text);">👤 Профиль</a>
+                    <button class="logout-btn" id="logoutBtnNav" style="background: none; border: 1px solid var(--header-border); padding: 8px 20px; border-radius: 40px; color: var(--header-text); cursor: pointer;">Выйти</button>
+                `;
+                document.getElementById('logoutBtnNav')?.addEventListener('click', () => {
+                    localStorage.clear();
+                    window.location.href = '/';
+                });
+            } else {
+                nav.innerHTML = `<a href="/">Поиск</a><a href="/login/">Вход</a><a href="/register/" class="btn" style="padding: 8px 20px; background: var(--gradient-fire); border-radius: 60px; color: #0D2744; text-decoration: none;">Регистрация</a>`;
+            }
+        }
+        renderNav();
+
+        const avatar = document.getElementById('avatar');
+        const userNameEl = document.getElementById('userName');
+        const changePhotoBtn = document.getElementById('changePhotoBtn');
+        const deletePhotoBtn = document.getElementById('deletePhotoBtn');
+        const photoInput = document.getElementById('photoInput');
+        const roleActions = document.getElementById('roleActions');
+        const tenantBtn = document.getElementById('tenantRoleBtn');
+        const landlordBtn = document.getElementById('landlordRoleBtn');
+        const userRoleDisplay = document.getElementById('userRoleDisplay');
+
+        let currentAvatarUrl = null;
+
+        function updateRoleActions() {
+            if (isLandlord) {
+                roleActions.innerHTML = `<a href="/my-apartments/" class="role-action-btn">🏠 Моя недвижимость</a><a href="/add-apartment/" class="role-action-btn">➕ Добавить квартиру</a><a href="/landlord-bookings/" class="role-action-btn">📅 Бронирования моих квартир</a>`;
+            } else {
+                roleActions.innerHTML = `<a href="/my-bookings/" class="role-action-btn">📋 Мои бронирования</a><button class="role-action-btn" id="favoritesBtn">❤️ Избранное</button>`;
+                document.getElementById('favoritesBtn')?.addEventListener('click', () => alert('Функция избранного будет доступна позже'));
+            }
+        }
+
+        function setActiveRoleDisplay() {
+            if (isLandlord) {
+                landlordBtn.classList.add('landlord-active');
+                tenantBtn.classList.remove('tenant-active');
+                userRoleDisplay.textContent = 'Арендодатель · С 2024 года';
+            } else {
+                tenantBtn.classList.add('tenant-active');
+                landlordBtn.classList.remove('landlord-active');
+                userRoleDisplay.textContent = 'Арендатор · С 2024 года';
+            }
+        }
+
+        async function loadUserAvatar() {
+            try {
+                const cacheBuster = Date.now();
+                const response = await fetch(`${API_URL}/Avatar/${userId}?t=${cacheBuster}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const avatarUrl = data.avatarUrl || data.path;
+                    
+                    if (avatarUrl) {
+                        currentAvatarUrl = avatarUrl;
+                        avatar.style.backgroundImage = `url('${avatarUrl}?t=${cacheBuster}')`;
+                        avatar.style.backgroundSize = 'cover';
+                        avatar.style.backgroundPosition = 'center';
+                        avatar.textContent = '';
+                        return;
+                    }
+                }
+                showInitials();
+            } catch (error) {
+                console.error('Ошибка загрузки аватара:', error);
+                showInitials();
+            }
+        }
+        
+        function showInitials() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            currentAvatarUrl = null;
+            avatar.style.backgroundImage = '';
+            avatar.style.background = 'var(--avatar-bg)';
+            avatar.textContent = (firstName?.charAt(0) || '') + (lastName?.charAt(0) || '');
+        }
+
+        async function uploadPhoto(file) {
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { alert('❌ Файл слишком большой. Максимум 5MB'); return; }
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) { alert('❌ Поддерживаются только JPEG, PNG, WEBP'); return; }
+            
+            const formData = new FormData();
+            formData.append('avatar', file);
+            
+            try {
+                const response = await fetch(`${API_URL}/Avatar/${userId}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    alert('✅ Аватар успешно обновлён!');
+                    await loadUserAvatar();
+                } else {
+                    const error = await response.json();
+                    alert(`❌ Ошибка загрузки аватара: ${error.message || 'Неизвестная ошибка'}`);
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('❌ Ошибка соединения с сервером');
+            }
+        }
+
+        async function deleteAvatar() {
+            if (!confirm('🗑️ Вы уверены, что хотите удалить аватар?')) return;
+            try {
+                const response = await fetch(`${API_URL}/Avatar/${userId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) { alert('✅ Аватар удалён'); showInitials(); }
+                else { alert('❌ Ошибка удаления аватара'); }
+            } catch (error) { alert('❌ Ошибка соединения с сервером'); }
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            const response = await fetch(url, {
+                ...options,
+                headers: { ...options.headers, 'Authorization': `Bearer ${token}` }
+            });
+            if (response.status === 401) { localStorage.clear(); window.location.href = '/login/'; throw new Error('Unauthorized'); }
+            return response;
+        }
+
+        function showChangePasswordModal() {
+            const modalHtml = `
+                <div id="passwordModal" class="modal">
+                    <div class="modal-content">
+                        <h3>🔐 Смена пароля</h3>
+                        <input type="password" id="oldPassword" class="modal-input" placeholder="Текущий пароль">
+                        <input type="password" id="newPassword1" class="modal-input" placeholder="Новый пароль">
+                        <input type="password" id="newPassword2" class="modal-input" placeholder="Повторите новый пароль">
+                        <div class="modal-buttons">
+                            <button class="modal-btn confirm" id="confirmPasswordChange">Сменить пароль</button>
+                            <button class="modal-btn cancel" id="cancelPasswordChange">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            document.getElementById('confirmPasswordChange').addEventListener('click', async () => {
+                const oldPass = document.getElementById('oldPassword').value;
+                const newPass1 = document.getElementById('newPassword1').value;
+                const newPass2 = document.getElementById('newPassword2').value;
+                if (!oldPass || !newPass1 || !newPass2) { alert('❌ Пожалуйста, заполните все поля'); return; }
+                if (newPass1 !== newPass2) { alert('❌ Новый пароль и подтверждение не совпадают'); return; }
+                try {
+                    const response = await fetchWithAuth(`${API_URL}/users/${userId}/password`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ oldPassword: oldPass, newPassword: newPass1 })
+                    });
+                    if (response.ok) { alert('✅ Пароль успешно изменён!'); document.getElementById('passwordModal').remove(); }
+                    else { alert('❌ Неверный текущий пароль'); }
+                } catch (error) { alert('❌ Ошибка соединения'); }
+            });
+            document.getElementById('cancelPasswordChange').addEventListener('click', () => { document.getElementById('passwordModal').remove(); });
+            document.getElementById('passwordModal').addEventListener('click', (e) => { if (e.target === document.getElementById('passwordModal')) document.getElementById('passwordModal').remove(); });
+        }
+
+        function initSettings() {
+            const languageSelect = document.getElementById('language');
+            const notificationsSelect = document.getElementById('notifications');
+            const savedLanguage = localStorage.getItem('user_language');
+            const savedNotifications = localStorage.getItem('user_notifications');
+            if (savedLanguage) languageSelect.value = savedLanguage;
+            if (savedNotifications) notificationsSelect.value = savedNotifications;
+            languageSelect.disabled = false;
+            notificationsSelect.disabled = false;
+            languageSelect.addEventListener('change', () => { localStorage.setItem('user_language', languageSelect.value); alert(`🌐 Язык интерфейса изменён на ${languageSelect.value === 'ru' ? 'Русский' : 'English'}`); });
+            notificationsSelect.addEventListener('change', () => { localStorage.setItem('user_notifications', notificationsSelect.value); const text = notificationsSelect.options[notificationsSelect.selectedIndex].text; alert(`🔔 Настройки уведомлений изменены на "${text}"`); });
+            document.getElementById('changePasswordBtn').addEventListener('click', showChangePasswordModal);
+        }
+
+        async function loadTenantStats() {
+            try {
+                const bookingsResponse = await fetchWithAuth(`${API_URL}/Bookings/user/${userId}`);
+                if (bookingsResponse.ok) { const bookings = await bookingsResponse.json(); document.getElementById('bookingsCount').textContent = bookings.length; }
+                const reviewsResponse = await fetchWithAuth(`${API_URL}/reviews/user/${userId}`);
+                if (reviewsResponse.ok) { const reviews = await reviewsResponse.json(); document.getElementById('reviewsCount').textContent = reviews.length; }
+            } catch (error) { console.error('Ошибка загрузки статистики:', error); }
+        }
+
+        async function loadLandlordStats() {
+            try {
+                const apartmentsResponse = await fetchWithAuth(`${API_URL}/Apartments/landlord/${userId}`);
+                if (apartmentsResponse.ok) { const apartments = await apartmentsResponse.json(); document.getElementById('bookingsCount').textContent = apartments.length; document.getElementById('bookingsCount').parentElement.querySelector('.stat-label').textContent = 'Квартир'; }
+                const bookingsResponse = await fetchWithAuth(`${API_URL}/Bookings/landlord/${userId}`);
+                if (bookingsResponse.ok) {
+                    const bookings = await bookingsResponse.json();
+                    if (!document.getElementById('landlordBookingsCount')) {
+                        const statsContainer = document.getElementById('userStats');
+                        const newStat = document.createElement('div'); newStat.className = 'stat-item'; newStat.innerHTML = `<div class="stat-value" id="landlordBookingsCount">${bookings.length}</div><div class="stat-label">Бронирований квартир</div>`;
+                        statsContainer.appendChild(newStat);
+                    } else { document.getElementById('landlordBookingsCount').textContent = bookings.length; }
+                }
+                const reviewsResponse = await fetchWithAuth(`${API_URL}/reviews/landlord/${userId}`);
+                if (reviewsResponse.ok) { const reviews = await reviewsResponse.json(); document.getElementById('reviewsCount').textContent = reviews.length; }
+            } catch (error) { console.error('Ошибка загрузки статистики:', error); }
+        }
+
+        async function loadUserStats() { if (isLandlord) await loadLandlordStats(); else await loadTenantStats(); }
+
+        async function loadUserData() {
+            try {
+                const response = await fetchWithAuth(`${API_URL}/users/${userId}`);
+                if (response.ok) {
+                    const userData = await response.json();
+                    userNameEl.textContent = `${userData.firstName} ${userData.lastName}`;
+                    document.getElementById('firstName').value = userData.firstName || '';
+                    document.getElementById('lastName').value = userData.lastName || '';
+                    document.getElementById('patronymic').value = userData.patronymic || '';
+                    document.getElementById('email').value = userData.email || '';
+                    document.getElementById('phone').value = userData.phone || '';
+                    document.getElementById('birthday').value = userData.birthday ? userData.birthday.split('T')[0] : '';
+                    showInitials();
+                    await loadUserAvatar();
+                }
+            } catch (error) { console.error('Ошибка загрузки данных пользователя:', error); }
+            await loadUserStats();
+            setActiveRoleDisplay();
+            updateRoleActions();
+            initSettings();
+        }
+
+        let isEditMode = false;
+        function setEditMode(enabled) {
+            isEditMode = enabled;
+            ['firstName', 'lastName', 'patronymic', 'phone', 'email', 'birthday'].forEach(id => { document.getElementById(id).disabled = !enabled; });
+            document.getElementById('editButtons').style.display = enabled ? 'flex' : 'none';
+            document.getElementById('enableEditBtn').style.display = enabled ? 'none' : 'block';
+        }
+        
+        async function saveProfile() {
+            const updateData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                patronymic: document.getElementById('patronymic').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                birthday: document.getElementById('birthday').value
+            };
+            try {
+                const response = await fetchWithAuth(`${API_URL}/users/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                if (response.ok) {
+                    alert('✅ Профиль обновлён');
+                    localStorage.setItem('userName', `${updateData.firstName} ${updateData.lastName}`);
+                    userNameEl.textContent = `${updateData.firstName} ${updateData.lastName}`;
+                    setEditMode(false);
+                    showInitials();
+                    await loadUserAvatar();
+                } else { alert('❌ Ошибка обновления'); }
+            } catch (error) { alert('❌ Ошибка соединения'); }
+        }
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.profile-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(`${this.getAttribute('data-tab')}-section`).classList.add('active');
+            });
+        });
+
+        changePhotoBtn.addEventListener('click', () => photoInput.click());
+        deletePhotoBtn.addEventListener('click', deleteAvatar);
+        photoInput.addEventListener('change', (e) => { if (e.target.files?.[0]) uploadPhoto(e.target.files[0]); photoInput.value = ''; });
+        document.getElementById('enableEditBtn').addEventListener('click', () => setEditMode(true));
+        document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+        document.getElementById('cancelEditBtn').addEventListener('click', () => { setEditMode(false); loadUserData(); });
+
+        loadUserData();
+    </script>
+</body>
+</html>

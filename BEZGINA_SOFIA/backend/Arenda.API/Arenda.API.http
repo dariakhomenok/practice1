@@ -1,0 +1,6 @@
+@Arenda.API_HostAddress = http://localhost:5244
+
+GET {{Arenda.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

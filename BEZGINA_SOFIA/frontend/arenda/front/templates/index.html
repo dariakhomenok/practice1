@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arenda | Поиск жилья</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* --- ПАЛИТРА №1 (Tangaroa + Firebrick) --- */
+        :root {
+            --tangaroa: #0D2744;
+            --wedgewood: #53728A;
+            --shipcove: #7691AD;
+            --spindle: #B9CFDD;
+            --firebrick: #FF929A;
+            --firebrick-hover: #e07a83;
+            --white: #FFFFFF;
+            --text-dark: #1a2a3a;
+            --text-light: #6a7f8f;
+            --shadow-sm: 0 8px 20px rgba(13, 39, 68, 0.06);
+            --shadow-md: 0 12px 28px rgba(13, 39, 68, 0.1);
+            --shadow-lg: 0 20px 35px -10px rgba(13, 39, 68, 0.15);
+            --gradient-fire: linear-gradient(135deg, #FF929A 0%, #f07a83 100%);
+            
+            /* Светлая тема — шапка тёмно-синяя */
+            --bg-body: #B9CFDD;
+            --bg-gradient-start: #d4e5f0;
+            --bg-gradient-mid: #B9CFDD;
+            --bg-gradient-end: #a8c0ce;
+            --header-bg: rgba(13, 39, 68, 0.85);
+            --header-text: rgba(185, 207, 221, 0.9);
+            --header-border: rgba(255, 255, 255, 0.1);
+            --card-bg: #FFFFFF;
+            --card-border: rgba(255, 146, 154, 0.25);
+            --banner-bg: #FFFFFF;
+            --footer-bg: rgba(13, 39, 68, 0.85);
+            --grid-color: rgba(13, 39, 68, 0.12);
+            --circle1: rgba(255, 146, 154, 0.4);
+            --circle2: rgba(13, 39, 68, 0.2);
+            --circle3: rgba(83, 114, 138, 0.25);
+            --circle4: rgba(255, 146, 154, 0.3);
+            --blob: rgba(255, 146, 154, 0.25);
+            --text-primary: #1a2a3a;
+            --text-secondary: #6a7f8f;
+            --banner-text: #6a7f8f;
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #B9CFDD 100%);
+            --profile-link-bg: rgba(185, 207, 221, 0.1);
+            --profile-link-border: rgba(185, 207, 221, 0.2);
+            --profile-link-color: rgba(185, 207, 221, 0.9);
+            --btn-text: #0D2744;
+            --heading-gradient: linear-gradient(135deg, #0D2744 0%, #53728A 50%, #FF929A 100%);
+            /* В светлой теме (шапка тёмная) — иконки должны быть светлыми */
+            --sun-icon-color: #B9CFDD;
+            --moon-icon-color: #B9CFDD;
+        }
+        
+        /* Тёмная тема — шапка светло-голубая */
+        body.dark {
+            --bg-body: #0D2744;
+            --bg-gradient-start: #1a3a5a;
+            --bg-gradient-mid: #0D2744;
+            --bg-gradient-end: #06152a;
+            --header-bg: rgba(185, 207, 221, 0.95);
+            --header-text: #0D2744;
+            --header-border: rgba(13, 39, 68, 0.15);
+            --card-bg: #3a5a7a;
+            --card-border: rgba(255, 146, 154, 0.35);
+            --banner-bg: #3a5a7a;
+            --footer-bg: rgba(13, 39, 68, 0.85);
+            --grid-color: rgba(185, 207, 221, 0.08);
+            --circle1: rgba(255, 146, 154, 0.25);
+            --circle2: rgba(185, 207, 221, 0.1);
+            --circle3: rgba(83, 114, 138, 0.2);
+            --circle4: rgba(255, 146, 154, 0.2);
+            --blob: rgba(255, 146, 154, 0.15);
+            --text-primary: #FFFFFF;
+            --text-secondary: #c0d0e0;
+            --banner-text: #FFFFFF;
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #0D2744 100%);
+            --profile-link-bg: rgba(13, 39, 68, 0.1);
+            --profile-link-border: rgba(13, 39, 68, 0.15);
+            --profile-link-color: #0D2744;
+            --btn-text: #0D2744;
+            --heading-gradient: linear-gradient(135deg, #B9CFDD 0%, #7BA3C0 50%, #FF929A 100%);
+            /* В тёмной теме (шапка светлая) — иконки должны быть тёмными */
+            --sun-icon-color: #0D2744;
+            --moon-icon-color: #0D2744;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+        
+        /* --- ЖИВОЙ ФОН --- */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 40%, var(--bg-gradient-end) 100%);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-1 {
+            position: fixed;
+            top: -150px;
+            right: -100px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, var(--circle1) 0%, rgba(255, 146, 154, 0.05) 60%, rgba(255, 146, 154, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 18s ease-in-out infinite;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-2 {
+            position: fixed;
+            bottom: -120px;
+            left: -80px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--circle2) 0%, rgba(13, 39, 68, 0.05) 60%, rgba(13, 39, 68, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float2 22s ease-in-out infinite;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-3 {
+            position: fixed;
+            top: 40%;
+            left: -50px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--circle3) 0%, rgba(83, 114, 138, 0.05) 60%, rgba(83, 114, 138, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float3 15s ease-in-out infinite;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-4 {
+            position: fixed;
+            bottom: 20%;
+            right: 15%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, var(--circle4) 0%, rgba(255, 146, 154, 0.02) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 25s ease-in-out infinite reverse;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-blob {
+            position: fixed;
+            bottom: 5%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--blob) 0%, rgba(255, 146, 154, 0) 70%);
+            border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%;
+            z-index: 0;
+            animation: morph 15s ease-in-out infinite;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, var(--grid-color) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-grid-diagonal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(45deg, var(--grid-color) 0px, var(--grid-color) 1px, transparent 1px, transparent 30px);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -20px) scale(1.05); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.08); }
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 40px); }
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%; }
+            50% { border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%; }
+        }
+        
+        /* --- ШАПКА --- */
+        .header {
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 80px;
+            padding: 10px 30px;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--header-border);
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .logo { 
+            font-size: 28px; 
+            font-weight: 800; 
+            background: var(--logo-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(255, 146, 154, 0.3);
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .nav a { 
+            color: var(--header-text); 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-fire);
+            transition: width 0.3s ease;
+        }
+        
+        .nav a:hover::after { width: 100%; }
+        .nav a:hover { color: var(--firebrick); }
+        
+        .nav .btn { 
+            padding: 10px 24px; 
+            background: var(--gradient-fire);
+            border-radius: 60px; 
+            color: var(--btn-text) !important; 
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255, 146, 154, 0.3);
+        }
+        
+        .nav .btn::after { display: none; }
+        .nav .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(255, 146, 154, 0.5); background: var(--gradient-fire); }
+        
+        .user-menu { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        
+        .profile-link { 
+            color: var(--profile-link-color); 
+            font-weight: 600; 
+            font-size: 14px; 
+            background: var(--profile-link-bg);
+            padding: 8px 18px; 
+            border-radius: 40px; 
+            text-decoration: none;
+            border: 1px solid var(--profile-link-border);
+            transition: all 0.2s;
+        }
+        
+        .profile-link:hover { 
+            background: var(--gradient-fire);
+            border-color: var(--firebrick);
+            color: #0D2744 !important;
+        }
+        
+        .logout-btn { 
+            background: none; 
+            border: 1px solid var(--header-border); 
+            padding: 8px 20px; 
+            border-radius: 40px; 
+            color: var(--header-text); 
+            cursor: pointer; 
+            font-weight: 500; 
+            transition: all 0.2s;
+        }
+        
+        .logout-btn:hover { 
+            border-color: var(--firebrick); 
+            color: var(--firebrick); 
+            background: rgba(255, 146, 154, 0.1);
+        }
+        
+        /* --- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ --- */
+        .theme-switch {
+            display: flex;
+            gap: 4px;
+            background: rgba(13, 39, 68, 0.15);
+            border-radius: 60px;
+            padding: 4px;
+        }
+        
+        body.dark .theme-switch {
+            background: rgba(185, 207, 221, 0.2);
+        }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        /* Иконки в неактивном состоянии */
+        .theme-btn.light {
+            color: var(--sun-icon-color);
+            background: transparent;
+        }
+        
+        .theme-btn.dark {
+            color: var(--moon-icon-color);
+            background: transparent;
+        }
+        
+        /* Активная кнопка — коралловый градиент */
+        .theme-btn.light.active {
+            background: var(--gradient-fire);
+            color: #0D2744;
+        }
+        
+        .theme-btn.dark.active {
+            background: var(--gradient-fire);
+            color: #0D2744;
+        }
+        
+        .main-container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 5; }
+        
+        /* --- БАННЕР С ФИЛЬТРАМИ --- */
+        .filter-banner {
+            background: var(--banner-bg);
+            border-radius: 32px;
+            padding: 45px 35px;
+            margin-bottom: 50px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+        
+        .filter-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .filter-banner h2 { 
+            font-size: 42px; 
+            margin-bottom: 15px; 
+            font-weight: 800;
+            background: var(--heading-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 15px rgba(255, 146, 154, 0.2);
+            letter-spacing: -0.5px;
+        }
+        
+        .filter-banner p { 
+            color: var(--banner-text); 
+            margin-bottom: 25px; 
+            font-size: 18px; 
+            font-weight: 500;
+        }
+        
+        .filter-link-btn {
+            display: inline-block;
+            padding: 14px 42px;
+            background: var(--gradient-fire);
+            border-radius: 60px;
+            color: #0D2744;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 146, 154, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .filter-link-btn:hover::before { left: 100%; }
+        .filter-link-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(255, 146, 154, 0.5); background: var(--gradient-fire); }
+        
+        /* --- СЕТКА КВАРТИР --- */
+        .apartments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .apartment-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            border: 1px solid var(--card-border);
+        }
+        
+        .apartment-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(255, 146, 154, 0.6);
+        }
+        
+        .apartment-image { 
+            height: 210px; 
+            background: linear-gradient(135deg, #B9CFDD, #a0b8c8);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .apartment-image img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s ease; 
+        }
+        
+        .apartment-card:hover .apartment-image img { transform: scale(1.06); }
+        
+        .apartment-image .badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--gradient-fire);
+            color: #0D2744;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 30px;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .apartment-image .badge-popular {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--tangaroa);
+            color: var(--spindle);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 30px;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .apartment-info { padding: 22px; }
+        
+        .apartment-info h3 { 
+            color: var(--text-primary);
+            font-size: 18px; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        
+        .apartment-address { 
+            color: var(--firebrick); 
+            font-size: 13px; 
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+        
+        .apartment-details { 
+            display: flex; 
+            gap: 16px; 
+            margin-bottom: 12px; 
+            color: var(--text-secondary); 
+            font-size: 13px; 
+        }
+        
+        .apartment-details span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .apartment-price { 
+            font-size: 26px; 
+            font-weight: 800; 
+            background: var(--gradient-fire);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px; 
+            letter-spacing: -0.5px;
+            display: inline-block;
+        }
+        
+        .apartment-landlord { 
+            font-size: 12px; 
+            color: var(--text-secondary); 
+            margin-top: 10px; 
+            padding-top: 10px; 
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .loader { 
+            text-align: center; 
+            padding: 60px; 
+            background: var(--card-bg);
+            border-radius: 32px;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--card-border);
+        }
+        
+        .loader::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-left: 12px;
+            border: 2px solid var(--firebrick);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-message { 
+            text-align: center; 
+            padding: 60px; 
+            background: var(--card-bg);
+            border-radius: 32px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--card-border);
+        }
+        
+        /* --- CTA СЕКЦИЯ --- */
+        .cta-section {
+            background: linear-gradient(135deg, #0D2744 0%, #1a3a5a 100%);
+            border-radius: 32px;
+            padding: 55px 45px;
+            text-align: center;
+            margin: 60px auto 80px;
+            max-width: 1200px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .cta-section h3 { 
+            font-size: 36px; 
+            font-weight: 800; 
+            margin-bottom: 15px;
+            background: var(--gradient-fire);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 15px rgba(255, 146, 154, 0.3);
+        }
+        
+        .cta-section p { 
+            font-size: 18px; 
+            margin-bottom: 25px; 
+            color: var(--spindle);
+        }
+        
+        .cta-btn { 
+            display: inline-block; 
+            padding: 14px 40px; 
+            background: var(--gradient-fire);
+            border-radius: 60px; 
+            color: #0D2744; 
+            font-size: 16px; 
+            font-weight: 700; 
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+            background: var(--gradient-fire);
+            color: #0D2744;
+        }
+        
+        .footer {
+            background: var(--footer-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border: 1px solid var(--header-border);
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 900px) { 
+            .apartments-grid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); } 
+        }
+        
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+            .header { flex-direction: column; gap: 15px; text-align: center; border-radius: 50px; padding: 15px 20px; }
+            .right-section { flex-wrap: wrap; justify-content: center; }
+            .nav { flex-wrap: wrap; justify-content: center; }
+            .filter-banner h2 { font-size: 28px; }
+            .filter-banner { padding: 30px 20px; }
+            .apartments-grid { grid-template-columns: 1fr; }
+            .cta-section { padding: 40px 25px; }
+            .cta-section h3 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+    <div class="bg-circle-3"></div>
+    <div class="bg-circle-4"></div>
+    <div class="bg-blob"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-grid-diagonal"></div>
+    
+    <div class="header">
+        <a href="/" class="logo">✦ Arenda</a>
+        <div class="right-section">
+            <div class="nav" id="nav"></div>
+            <div class="theme-switch">
+                <button class="theme-btn light active" id="lightModeBtn">☼</button>
+                <button class="theme-btn dark" id="darkModeBtn">☽</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="filter-banner">
+            <h2>🔍︎ Найди идеальное жилье</h2>
+            <p>Квартиры с душой — для тех, кто ценит комфорт и стиль</p>
+            <a href="/search/" class="filter-link-btn">✨ Расширенный поиск</a>
+        </div>
+
+        <div id="apartmentsList" class="apartments-grid">
+            <div class="loader">Загрузка квартир</div>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <h3>Готовы начать путешествие?</h3>
+        <p>Присоединяйтесь к тысячам довольных путешественников</p>
+        <a href="/register/" class="cta-btn">Зарегистрироваться</a>
+    </div>
+    
+    <div class="footer">
+        <p>© 2025 Arenda — Поиск жилья для комфортного проживания</p>
+    </div>
+
+    <script>
+        const lightModeBtn = document.getElementById('lightModeBtn');
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        
+        function updateThemeButtons(theme) {
+            if (theme === 'dark') {
+                lightModeBtn.classList.remove('active');
+                darkModeBtn.classList.add('active');
+            } else {
+                lightModeBtn.classList.add('active');
+                darkModeBtn.classList.remove('active');
+            }
+        }
+        
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThemeButtons('dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThemeButtons('light');
+            }
+        }
+        
+        lightModeBtn.addEventListener('click', () => setTheme('light'));
+        darkModeBtn.addEventListener('click', () => setTheme('dark'));
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            updateThemeButtons('dark');
+        } else {
+            updateThemeButtons('light');
+        }
+        
+        const API_URL = 'https://localhost:7151/api';
+        const BACKEND_URL = 'https://localhost:7151';
+        
+        const token = localStorage.getItem('token');
+        const userName = localStorage.getItem('userName');
+        const nav = document.getElementById('nav');
+        
+        function renderNav() {
+            if (token && userName) {
+                nav.innerHTML = `
+                    <div class="user-menu">
+                        <a href="/" class="profile-link">🔍 Поиск</a>
+                        <a href="/profile/" class="profile-link">👤 Профиль</a>
+                        <button class="logout-btn" id="logoutBtn">Выйти</button>
+                    </div>
+                `;
+                document.getElementById('logoutBtn')?.addEventListener('click', () => {
+                    localStorage.clear();
+                    window.location.href = '/';
+                });
+            } else {
+                nav.innerHTML = `
+                    <div class="user-menu">
+                        <a href="/" class="profile-link">🔍 Поиск</a>
+                        <a href="/login/" class="profile-link">Вход</a>
+                        <a href="/register/" class="btn">Регистрация</a>
+                    </div>
+                `;
+            }
+        }
+        
+        renderNav();
+
+        async function getApartmentPhoto(apartmentId) {
+            try {
+                const response = await fetch(`${API_URL}/Apartments/${apartmentId}`);
+                if (!response.ok) return null;
+                const data = await response.json();
+                if (data.photos && data.photos.length > 0 && data.photos[0].url) {
+                    let photoPath = data.photos[0].url;
+                    if (!photoPath.startsWith('http') && !photoPath.startsWith('//')) {
+                        if (!photoPath.startsWith('/')) photoPath = '/' + photoPath;
+                        return `${BACKEND_URL}${photoPath}`;
+                    }
+                    return photoPath;
+                }
+                return null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        async function loadApartments() {
+            const container = document.getElementById('apartmentsList');
+            container.innerHTML = '<div class="loader">Загрузка квартир</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/Apartments/search`);
+                if (!response.ok) throw new Error('Ошибка загрузки');
+                
+                const apartments = await response.json();
+                
+                if (apartments.length === 0) {
+                    container.innerHTML = '<div class="empty-message">Квартир пока нет</div>';
+                    return;
+                }
+                
+                container.innerHTML = '';
+                
+                for (let i = 0; i < apartments.length; i++) {
+                    const apt = apartments[i];
+                    const card = document.createElement('div');
+                    card.className = 'apartment-card';
+                    card.onclick = () => window.location.href = `/apartment/${apt.id}/`;
+                    
+                    const badgeHtml = i === 0 ? '<div class="badge">✨ HOT</div><div class="badge-popular">⭐ Популярное</div>' : (i === 1 ? '<div class="badge">🆕 NEW</div>' : '');
+                    
+                    card.innerHTML = `
+                        <div class="apartment-image">
+                            ${badgeHtml}
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: linear-gradient(135deg, #B9CFDD, #a0b8c8); color: #0D2744;">
+                                📷 Загрузка...
+                            </div>
+                        </div>
+                        <div class="apartment-info">
+                            <h3>${escapeHtml(apt.address)}</h3>
+                            <div class="apartment-address">📍 ${escapeHtml(apt.cityName)}</div>
+                            <div class="apartment-details">
+                                <span>🛏️ ${apt.rooms} комн.</span>
+                                <span>📐 ${apt.area} м²</span>
+                            </div>
+                            <div class="apartment-price">${apt.price.toLocaleString()} ₽/сутки</div>
+                            <div class="apartment-landlord">👤 ${escapeHtml(apt.landLordName || apt.landlordName || 'Владелец')}</div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                    
+                    const photoUrl = await getApartmentPhoto(apt.id);
+                    const imageDiv = card.querySelector('.apartment-image');
+                    if (photoUrl) {
+                        imageDiv.innerHTML = `<img src="${photoUrl}" alt="Фото" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#B9CFDD,#a0b8c8);color:#0D2744;\'>📷 Нет фото</div>'">${badgeHtml}`;
+                    } else {
+                        imageDiv.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#B9CFDD,#a0b8c8);color:#0D2744;">📷 Нет фото</div>${badgeHtml}`;
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                container.innerHTML = '<div class="empty-message">❌ Ошибка загрузки</div>';
+            }
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+        }
+        
+        loadApartments();
+    </script>
+</body>
+</html>

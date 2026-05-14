@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arenda | Поиск квартир</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* --- ПАЛИТРА (Tangaroa + Firebrick) --- */
+        :root {
+            --tangaroa: #0D2744;
+            --wedgewood: #53728A;
+            --shipcove: #7691AD;
+            --spindle: #B9CFDD;
+            --firebrick: #FF929A;
+            --firebrick-hover: #e07a83;
+            --white: #FFFFFF;
+            --text-dark: #1a2a3a;
+            --text-light: #6a7f8f;
+            --shadow-sm: 0 8px 20px rgba(13, 39, 68, 0.06);
+            --shadow-md: 0 12px 28px rgba(13, 39, 68, 0.1);
+            --shadow-lg: 0 20px 35px -10px rgba(13, 39, 68, 0.15);
+            --gradient-fire: linear-gradient(135deg, #FF929A 0%, #f07a83 100%);
+            
+            /* Светлая тема */
+            --bg-body: #B9CFDD;
+            --bg-gradient-start: #d4e5f0;
+            --bg-gradient-mid: #B9CFDD;
+            --bg-gradient-end: #a8c0ce;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 146, 154, 0.25);
+            --text-primary: #1a2a3a;
+            --text-secondary: #6a7f8f;
+            --input-bg: #f9fafb;
+            --input-border: #e5e7eb;
+            --input-focus: #FF929A;
+            --filters-bg: rgba(255, 255, 255, 0.95);
+            --result-header-bg: rgba(255, 255, 255, 0.9);
+            --amenity-bg: #f3f4f6;
+            --amenity-color: #4b5563;
+            --checkbox-accent: #0D2744;
+            --sun-icon-color: #B9CFDD;
+            --moon-icon-color: #B9CFDD;
+            --header-bg: rgba(13, 39, 68, 0.85);
+            --header-text: rgba(185, 207, 221, 0.9);
+            --header-border: rgba(255, 255, 255, 0.1);
+            --select-text: #1a2a3a;
+            --select-option-bg: #ffffff;
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #B9CFDD 100%);
+        }
+        
+        /* Тёмная тема */
+        body.dark {
+            --bg-body: #0D2744;
+            --bg-gradient-start: #1a3a5a;
+            --bg-gradient-mid: #0D2744;
+            --bg-gradient-end: #06152a;
+            --card-bg: rgba(58, 90, 122, 0.95);
+            --card-border: rgba(255, 146, 154, 0.35);
+            --text-primary: #FFFFFF;
+            --text-secondary: #c0d0e0;
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.2);
+            --input-focus: #FF929A;
+            --filters-bg: rgba(58, 90, 122, 0.95);
+            --result-header-bg: rgba(58, 90, 122, 0.9);
+            --amenity-bg: rgba(255, 255, 255, 0.1);
+            --amenity-color: #c0d0e0;
+            --checkbox-accent: #FF929A;
+            --sun-icon-color: #0D2744;
+            --moon-icon-color: #0D2744;
+            --header-bg: rgba(185, 207, 221, 0.95);
+            --header-text: #0D2744;
+            --header-border: rgba(13, 39, 68, 0.15);
+            --select-text: #1a2a3a;
+            --select-option-bg: #3a5a7a;
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #0D2744 100%);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+        
+        /* Стили для select в тёмной теме */
+        select {
+            color: var(--select-text) !important;
+            background: var(--input-bg) !important;
+        }
+        
+        select option {
+            color: var(--select-text);
+            background: var(--select-option-bg);
+        }
+        
+        /* --- ЖИВОЙ ФОН --- */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 40%, var(--bg-gradient-end) 100%);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-1 {
+            position: fixed;
+            top: -150px;
+            right: -100px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.25) 0%, rgba(255, 146, 154, 0.05) 60%, rgba(255, 146, 154, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 18s ease-in-out infinite;
+        }
+        
+        .bg-circle-2 {
+            position: fixed;
+            bottom: -120px;
+            left: -80px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(13, 39, 68, 0.15) 0%, rgba(13, 39, 68, 0.05) 60%, rgba(13, 39, 68, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float2 22s ease-in-out infinite;
+        }
+        
+        .bg-circle-3 {
+            position: fixed;
+            top: 40%;
+            left: -50px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(83, 114, 138, 0.2) 0%, rgba(83, 114, 138, 0.05) 60%, rgba(83, 114, 138, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float3 15s ease-in-out infinite;
+        }
+        
+        .bg-circle-4 {
+            position: fixed;
+            bottom: 20%;
+            right: 15%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.2) 0%, rgba(255, 146, 154, 0.02) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 25s ease-in-out infinite reverse;
+        }
+        
+        .bg-blob {
+            position: fixed;
+            bottom: 5%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.15) 0%, rgba(255, 146, 154, 0) 70%);
+            border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%;
+            z-index: 0;
+            animation: morph 15s ease-in-out infinite;
+        }
+        
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+        
+        .bg-grid-diagonal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(45deg, rgba(13, 39, 68, 0.05) 0px, rgba(13, 39, 68, 0.05) 1px, transparent 1px, transparent 30px);
+            z-index: 0;
+        }
+        
+        body.dark .bg-grid {
+            background-image: 
+                linear-gradient(rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px);
+        }
+        
+        body.dark .bg-grid-diagonal {
+            background-image: repeating-linear-gradient(45deg, rgba(185, 207, 221, 0.08) 0px, rgba(185, 207, 221, 0.08) 1px, transparent 1px, transparent 30px);
+        }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -20px) scale(1.05); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.08); }
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 40px); }
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%; }
+            50% { border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%; }
+        }
+        
+        /* --- ШАПКА (НЕ ФИКСИРОВАННАЯ) --- */
+        .header {
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 80px;
+            padding: 10px 30px;
+            max-width: 1400px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--header-border);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo { 
+            font-size: 28px; 
+            font-weight: 800; 
+            background: var(--logo-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav { display: flex; gap: 20px; align-items: center; }
+        .nav a { color: var(--header-text); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+        .nav a:hover { color: var(--firebrick); }
+        
+        /* --- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ --- */
+        .theme-switch {
+            display: flex;
+            gap: 4px;
+            background: rgba(13, 39, 68, 0.15);
+            border-radius: 60px;
+            padding: 4px;
+        }
+        
+        body.dark .theme-switch {
+            background: rgba(185, 207, 221, 0.2);
+        }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+        }
+        
+        .theme-btn.light { color: var(--sun-icon-color); background: transparent; }
+        .theme-btn.dark { color: var(--moon-icon-color); background: transparent; }
+        .theme-btn.light.active { background: var(--gradient-fire); color: #0D2744; }
+        .theme-btn.dark.active { background: var(--gradient-fire); color: #0D2744; }
+        
+        /* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        
+        /* ===== ФИЛЬТРЫ ===== */
+        .filters-sidebar {
+            width: 320px;
+            flex-shrink: 0;
+        }
+        
+        .filters-card {
+            background: var(--filters-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            padding: 30px 25px;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+        
+        .filters-card h3 {
+            color: var(--text-primary);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+        
+        .filter-group {
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--input-border);
+            padding-bottom: 20px;
+        }
+        
+        .filter-group:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .filter-group label {
+            display: block;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .price-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .price-inputs input {
+            width: 50%;
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 16px;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        
+        .price-inputs input:focus {
+            outline: none;
+            border-color: var(--input-focus);
+        }
+        
+        .filter-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 16px;
+            font-size: 15px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        
+        .filter-group input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 16px;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+        
+        .filter-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--input-focus);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            accent-color: var(--checkbox-accent);
+        }
+        
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .apply-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-fire);
+            border: none;
+            border-radius: 60px;
+            color: #0D2744;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 146, 154, 0.3);
+        }
+        
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(255, 146, 154, 0.5);
+        }
+        
+        /* ===== РЕЗУЛЬТАТЫ ===== */
+        .results-main {
+            flex: 1;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: var(--result-header-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 15px 25px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .results-header h2 {
+            color: var(--text-primary);
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .results-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        .sort-box select {
+            padding: 10px 30px 10px 15px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 30px;
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .apartment-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--card-border);
+        }
+        
+        .apartment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--firebrick);
+        }
+        
+        .card-image {
+            height: 180px;
+            background: var(--input-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            overflow: hidden;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .price {
+            color: var(--firebrick);
+            font-weight: 700;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .address {
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .city {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .details {
+            display: flex;
+            gap: 15px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            padding: 12px 0;
+            border-top: 1px solid var(--input-border);
+            border-bottom: 1px solid var(--input-border);
+            margin-bottom: 12px;
+        }
+        
+        .details-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-fire);
+            border: none;
+            border-radius: 60px;
+            color: #0D2744;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 146, 154, 0.3);
+        }
+        
+        .details-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 146, 154, 0.4);
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 60px;
+            background: var(--card-bg);
+            border-radius: 32px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            border: 1px solid var(--card-border);
+        }
+        
+        @media (max-width: 900px) {
+            .search-container { flex-direction: column; }
+            .filters-sidebar { width: 100%; }
+            .results-header { flex-direction: column; gap: 15px; text-align: center; }
+        }
+        
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+            .header { padding: 8px 20px; margin-bottom: 20px; }
+            .right-section { gap: 10px; }
+            .nav a { margin-right: 12px; font-size: 14px; }
+            .price-inputs { flex-direction: column; }
+            .price-inputs input { width: 100%; }
+            .results-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+    <div class="bg-circle-3"></div>
+    <div class="bg-circle-4"></div>
+    <div class="bg-blob"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-grid-diagonal"></div>
+    
+    <div class="header">
+        <a href="/" class="logo">✦ Arenda</a>
+        <div class="right-section">
+            <div class="nav" id="nav"></div>
+            <div class="theme-switch">
+                <button class="theme-btn light active" id="lightModeBtn">☼</button>
+                <button class="theme-btn dark" id="darkModeBtn">☽</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="search-container">
+            <!-- Фильтры -->
+            <div class="filters-sidebar">
+                <div class="filters-card">
+                    <h3>🔍 Фильтры</h3>
+                    
+                    <div class="filter-group">
+                        <label>📍 Город</label>
+                        <select id="cityId">
+                            <option value="">Загрузка городов...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>🔎 Поиск по адресу</label>
+                        <input type="text" id="addressSearch" placeholder="Улица, метро, район...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>💰 Цена (₽/сутки)</label>
+                        <div class="price-inputs">
+                            <input type="number" id="minPrice" placeholder="От">
+                            <input type="number" id="maxPrice" placeholder="До">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>💰 Залог (₽)</label>
+                        <div class="price-inputs">
+                            <input type="number" id="minDeposit" placeholder="От">
+                            <input type="number" id="maxDeposit" placeholder="До">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>📐 Площадь (м²)</label>
+                        <div class="price-inputs">
+                            <input type="number" id="minArea" placeholder="От">
+                            <input type="number" id="maxArea" placeholder="До">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>🏢 Этаж</label>
+                        <div class="price-inputs">
+                            <input type="number" id="minFloor" placeholder="От">
+                            <input type="number" id="maxFloor" placeholder="До">
+                        </div>
+                        <div class="checkbox-group" style="margin-top: 10px;">
+                            <div class="checkbox-item"><input type="checkbox" id="notFirstFloor"> <label>Не первый этаж</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="notLastFloor"> <label>Не последний этаж</label></div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>🛏️ Комнаты</label>
+                        <select id="rooms">
+                            <option value="">Любое</option>
+                            <option value="0">Студия</option>
+                            <option value="1">1 комната</option>
+                            <option value="2">2 комнаты</option>
+                            <option value="3">3 комнаты</option>
+                            <option value="4">4+ комнаты</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>📅 Мин. срок аренды (суток)</label>
+                        <div class="price-inputs">
+                            <input type="number" id="minRentDays" placeholder="От">
+                            <input type="number" id="maxRentDays" placeholder="До">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>🛠️ Ремонт</label>
+                        <select id="renovation">
+                            <option value="">Любой</option>
+                            <option value="Косметический">Косметический</option>
+                            <option value="Евро">Евро</option>
+                            <option value="Дизайнерский">Дизайнерский</option>
+                            <option value="Без ремонта">Без ремонта</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>✨ Удобства</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item"><input type="checkbox" id="furniture"> <label>Мебель</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="appliances"> <label>Бытовая техника</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="internet"> <label>Интернет/Wi-Fi</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="parking"> <label>Парковка</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="elevator"> <label>Лифт</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="balcony"> <label>Балкон</label></div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>📋 Правила</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item"><input type="checkbox" id="petsAllowed"> <label>Можно с животными</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="childrenAllowed"> <label>Можно с детьми</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="smokingAllowed"> <label>Можно курить</label></div>
+                        </div>
+                    </div>
+                    
+                    <button class="apply-btn" onclick="searchApartments()">🔍 Найти квартиры</button>
+                </div>
+            </div>
+            
+            <!-- Результаты -->
+            <div class="results-main">
+                <div class="results-header">
+                    <div>
+                        <h2>Результаты поиска</h2>
+                        <p id="resultCount">Загрузка...</p>
+                    </div>
+                    <div class="sort-box">
+                        <select id="sortBy" onchange="searchApartments()">
+                            <option value="">По умолчанию</option>
+                            <option value="price_asc">Сначала дешевле</option>
+                            <option value="price_desc">Сначала дороже</option>
+                            <option value="rooms_asc">По возрастанию комнат</option>
+                            <option value="area_asc">По возрастанию площади</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="results" class="results-grid">
+                    <div class="loader">Загрузка квартир...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // --- ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ---
+        const lightModeBtn = document.getElementById('lightModeBtn');
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        
+        function updateThemeButtons(theme) {
+            if (theme === 'dark') {
+                lightModeBtn.classList.remove('active');
+                darkModeBtn.classList.add('active');
+            } else {
+                lightModeBtn.classList.add('active');
+                darkModeBtn.classList.remove('active');
+            }
+        }
+        
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThemeButtons('dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThemeButtons('light');
+            }
+        }
+        
+        lightModeBtn.addEventListener('click', () => setTheme('light'));
+        darkModeBtn.addEventListener('click', () => setTheme('dark'));
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            updateThemeButtons('dark');
+        } else {
+            updateThemeButtons('light');
+        }
+        
+        const API_URL = 'https://localhost:7151/api';
+        const BACKEND_URL = 'https://localhost:7151';
+        
+        function updateNav() {
+            const token = localStorage.getItem('token');
+            const userName = localStorage.getItem('userName');
+            const nav = document.getElementById('nav');
+            
+            if (token && userName) {
+                nav.innerHTML = `
+                    <a href="/">Поиск</a>
+                    <a href="/profile/">👤 ${userName}</a>
+                    <button onclick="logout()" style="background: none; border: 1px solid var(--header-border); padding: 8px 20px; border-radius: 40px; color: var(--header-text); cursor: pointer;">Выйти</button>
+                `;
+            } else {
+                nav.innerHTML = `<a href="/">Поиск</a><a href="/login/">Вход</a><a href="/register/" class="btn" style="padding: 8px 20px; background: var(--gradient-fire); border-radius: 60px; color: #0D2744; text-decoration: none;">Регистрация</a>`;
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+        }
+        
+        // ФУНКЦИЯ СОРТИРОВКИ НА ФРОНТЕНДЕ
+        function sortApartments(apartments, sortBy) {
+            const sorted = [...apartments];
+            
+            switch (sortBy) {
+                case 'price_asc':
+                    return sorted.sort((a, b) => a.price - b.price);
+                case 'price_desc':
+                    return sorted.sort((a, b) => b.price - a.price);
+                case 'rooms_asc':
+                    return sorted.sort((a, b) => a.rooms - b.rooms);
+                case 'area_asc':
+                    return sorted.sort((a, b) => a.area - b.area);
+                default:
+                    return sorted;
+            }
+        }
+        
+        async function loadCities() {
+            try {
+                const response = await fetch(`${API_URL}/Cities`);
+                if (response.ok) {
+                    const cities = await response.json();
+                    const citySelect = document.getElementById('cityId');
+                    citySelect.innerHTML = '<option value="">Любой город</option>';
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+                } else {
+                    setFallbackCities();
+                }
+            } catch (error) {
+                setFallbackCities();
+            }
+        }
+        
+        function setFallbackCities() {
+            const citySelect = document.getElementById('cityId');
+            citySelect.innerHTML = `
+                <option value="">Любой город</option>
+                <option value="1">Москва</option>
+                <option value="2">Санкт-Петербург</option>
+                <option value="3">Казань</option>
+                <option value="4">Сочи</option>
+                <option value="5">Екатеринбург</option>
+                <option value="6">Новосибирск</option>
+            `;
+        }
+        
+        async function searchApartments() {
+            const params = new URLSearchParams();
+            
+            const cityId = document.getElementById('cityId').value;
+            const addressSearch = document.getElementById('addressSearch').value;
+            const minPrice = document.getElementById('minPrice').value;
+            const maxPrice = document.getElementById('maxPrice').value;
+            const minDeposit = document.getElementById('minDeposit').value;
+            const maxDeposit = document.getElementById('maxDeposit').value;
+            const minArea = document.getElementById('minArea').value;
+            const maxArea = document.getElementById('maxArea').value;
+            const minFloor = document.getElementById('minFloor').value;
+            const maxFloor = document.getElementById('maxFloor').value;
+            const notFirstFloor = document.getElementById('notFirstFloor').checked;
+            const notLastFloor = document.getElementById('notLastFloor').checked;
+            const rooms = document.getElementById('rooms').value;
+            const minRentDays = document.getElementById('minRentDays').value;
+            const maxRentDays = document.getElementById('maxRentDays').value;
+            const renovation = document.getElementById('renovation').value;
+            const furniture = document.getElementById('furniture').checked;
+            const appliances = document.getElementById('appliances').checked;
+            const internet = document.getElementById('internet').checked;
+            const parking = document.getElementById('parking').checked;
+            const elevator = document.getElementById('elevator').checked;
+            const balcony = document.getElementById('balcony').checked;
+            const petsAllowed = document.getElementById('petsAllowed').checked;
+            const childrenAllowed = document.getElementById('childrenAllowed').checked;
+            const smokingAllowed = document.getElementById('smokingAllowed').checked;
+            const sortBy = document.getElementById('sortBy').value;
+            
+            if (cityId) params.append('CityId', cityId);
+            if (addressSearch) params.append('AddressSearch', addressSearch);
+            if (minPrice) params.append('MinPrice', minPrice);
+            if (maxPrice) params.append('MaxPrice', maxPrice);
+            if (minDeposit) params.append('MinDeposit', minDeposit);
+            if (maxDeposit) params.append('MaxDeposit', maxDeposit);
+            if (minArea) params.append('MinArea', minArea);
+            if (maxArea) params.append('MaxArea', maxArea);
+            if (minFloor) params.append('MinFloor', minFloor);
+            if (maxFloor) params.append('MaxFloor', maxFloor);
+            if (notFirstFloor) params.append('NotFirstFloor', true);
+            if (notLastFloor) params.append('NotLastFloor', true);
+            if (rooms !== '') params.append('Rooms', rooms);
+            if (minRentDays) params.append('MinRentDays', minRentDays);
+            if (maxRentDays) params.append('MaxRentDays', maxRentDays);
+            if (renovation) params.append('Renovation', renovation);
+            if (furniture) params.append('Furniture', true);
+            if (appliances) params.append('Appliances', true);
+            if (internet) params.append('Internet', true);
+            if (parking) params.append('Parking', true);
+            if (elevator) params.append('Elevator', true);
+            if (balcony) params.append('Balcony', true);
+            if (petsAllowed) params.append('PetsAllowed', true);
+            if (childrenAllowed) params.append('ChildrenAllowed', true);
+            if (smokingAllowed) params.append('SmokingAllowed', true);
+            
+            const container = document.getElementById('results');
+            container.innerHTML = '<div class="loader">🔍 Поиск квартир...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/Apartments/search?${params.toString()}`);
+                let apartments = await response.json();
+                
+                // ПРИМЕНЯЕМ СОРТИРОВКУ
+                apartments = sortApartments(apartments, sortBy);
+                
+                document.getElementById('resultCount').textContent = `Найдено ${apartments.length} квартир`;
+                
+                if (apartments.length === 0) {
+                    container.innerHTML = '<div class="loader">🏠 Квартир не найдено. Попробуйте изменить параметры поиска.</div>';
+                    return;
+                }
+                
+                container.innerHTML = apartments.map(apt => {
+                    let photoHtml = '📷 Фото';
+                    if (apt.mainPhoto && apt.mainPhoto.trim() !== '') {
+                        const photoUrl = `${BACKEND_URL}${apt.mainPhoto.trim()}`;
+                        photoHtml = `<img src="${photoUrl}" alt="Фото квартиры">`;
+                    }
+                    
+                    return `
+                        <div class="apartment-card">
+                            <div class="card-image">${photoHtml}</div>
+                            <div class="card-content">
+                                <div class="price">${apt.price.toLocaleString()} ₽/сутки</div>
+                                <div class="address">${escapeHtml(apt.address)}</div>
+                                <div class="city">📍 ${escapeHtml(apt.cityName)}</div>
+                                <div class="details">
+                                    <span>${apt.rooms} комн.</span>
+                                    <span>${apt.area} м²</span>
+                                </div>
+                                <a href="/apartment/${apt.id}/" class="details-btn">Подробнее →</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                container.innerHTML = '<div class="loader">❌ Ошибка загрузки. Проверьте подключение к серверу.</div>';
+            }
+        }
+        
+        updateNav();
+        loadCities();
+        searchApartments();
+        
+        window.searchApartments = searchApartments;
+        window.logout = logout;
+    </script>
+</body>
+</html>

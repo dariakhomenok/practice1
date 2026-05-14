@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arenda | Бронирование</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* --- ПАЛИТРА (Tangaroa + Firebrick) --- */
+        :root {
+            --tangaroa: #0D2744;
+            --wedgewood: #53728A;
+            --shipcove: #7691AD;
+            --spindle: #B9CFDD;
+            --firebrick: #FF929A;
+            --firebrick-hover: #e07a83;
+            --white: #FFFFFF;
+            --text-dark: #1a2a3a;
+            --text-light: #6a7f8f;
+            --shadow-sm: 0 8px 20px rgba(13, 39, 68, 0.06);
+            --shadow-md: 0 12px 28px rgba(13, 39, 68, 0.1);
+            --shadow-lg: 0 20px 35px -10px rgba(13, 39, 68, 0.15);
+            --gradient-fire: linear-gradient(135deg, #FF929A 0%, #f07a83 100%);
+            
+            /* Светлая тема */
+            --bg-body: #B9CFDD;
+            --bg-gradient-start: #d4e5f0;
+            --bg-gradient-mid: #B9CFDD;
+            --bg-gradient-end: #a8c0ce;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 146, 154, 0.25);
+            --text-primary: #1a2a3a;
+            --text-secondary: #6a7f8f;
+            --input-bg: #f9fafb;
+            --input-border: #e5e7eb;
+            --input-focus: #FF929A;
+            --sun-icon-color: #B9CFDD;
+            --moon-icon-color: #B9CFDD;
+            --header-bg: rgba(13, 39, 68, 0.85);
+            --header-text: rgba(185, 207, 221, 0.9);
+            --header-border: rgba(255, 255, 255, 0.1);
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #B9CFDD 100%);
+            --summary-bg: rgba(0,0,0,0.03);
+            --total-bg: linear-gradient(135deg, #0D2744 0%, #1a3a5a 100%);
+            --total-text: #FFFFFF;
+        }
+        
+        /* Тёмная тема */
+        body.dark {
+            --bg-body: #0D2744;
+            --bg-gradient-start: #1a3a5a;
+            --bg-gradient-mid: #0D2744;
+            --bg-gradient-end: #06152a;
+            --card-bg: rgba(58, 90, 122, 0.95);
+            --card-border: rgba(255, 146, 154, 0.35);
+            --text-primary: #FFFFFF;
+            --text-secondary: #c0d0e0;
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.2);
+            --input-focus: #FF929A;
+            --sun-icon-color: #0D2744;
+            --moon-icon-color: #0D2744;
+            --header-bg: rgba(185, 207, 221, 0.95);
+            --header-text: #0D2744;
+            --header-border: rgba(13, 39, 68, 0.15);
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #0D2744 100%);
+            --summary-bg: rgba(255,255,255,0.05);
+            --total-bg: var(--gradient-fire);
+            --total-text: #0D2744;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+        
+        /* --- ЖИВОЙ ФОН --- */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 40%, var(--bg-gradient-end) 100%);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-1 {
+            position: fixed;
+            top: -150px;
+            right: -100px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.25) 0%, rgba(255, 146, 154, 0.05) 60%, rgba(255, 146, 154, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 18s ease-in-out infinite;
+        }
+        
+        .bg-circle-2 {
+            position: fixed;
+            bottom: -120px;
+            left: -80px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(13, 39, 68, 0.15) 0%, rgba(13, 39, 68, 0.05) 60%, rgba(13, 39, 68, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float2 22s ease-in-out infinite;
+        }
+        
+        .bg-circle-3 {
+            position: fixed;
+            top: 40%;
+            left: -50px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(83, 114, 138, 0.2) 0%, rgba(83, 114, 138, 0.05) 60%, rgba(83, 114, 138, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float3 15s ease-in-out infinite;
+        }
+        
+        .bg-circle-4 {
+            position: fixed;
+            bottom: 20%;
+            right: 15%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.2) 0%, rgba(255, 146, 154, 0.02) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 25s ease-in-out infinite reverse;
+        }
+        
+        .bg-blob {
+            position: fixed;
+            bottom: 5%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.15) 0%, rgba(255, 146, 154, 0) 70%);
+            border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%;
+            z-index: 0;
+            animation: morph 15s ease-in-out infinite;
+        }
+        
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+        
+        .bg-grid-diagonal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(45deg, rgba(13, 39, 68, 0.05) 0px, rgba(13, 39, 68, 0.05) 1px, transparent 1px, transparent 30px);
+            z-index: 0;
+        }
+        
+        body.dark .bg-grid {
+            background-image: 
+                linear-gradient(rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px);
+        }
+        
+        body.dark .bg-grid-diagonal {
+            background-image: repeating-linear-gradient(45deg, rgba(185, 207, 221, 0.08) 0px, rgba(185, 207, 221, 0.08) 1px, transparent 1px, transparent 30px);
+        }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -20px) scale(1.05); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.08); }
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 40px); }
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%; }
+            50% { border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%; }
+        }
+        
+        /* --- ШАПКА (НЕ ФИКСИРОВАННАЯ) --- */
+        .header {
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 80px;
+            padding: 10px 30px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--header-border);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo { 
+            font-size: 28px; 
+            font-weight: 800; 
+            background: var(--logo-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav { display: flex; gap: 20px; align-items: center; }
+        .nav a { color: var(--header-text); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+        .nav a:hover { color: var(--firebrick); }
+        
+        /* --- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ --- */
+        .theme-switch {
+            display: flex;
+            gap: 4px;
+            background: rgba(13, 39, 68, 0.15);
+            border-radius: 60px;
+            padding: 4px;
+        }
+        
+        body.dark .theme-switch {
+            background: rgba(185, 207, 221, 0.2);
+        }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+        }
+        
+        .theme-btn.light { color: var(--sun-icon-color); background: transparent; }
+        .theme-btn.dark { color: var(--moon-icon-color); background: transparent; }
+        .theme-btn.light.active { background: var(--gradient-fire); color: #0D2744; }
+        .theme-btn.dark.active { background: var(--gradient-fire); color: #0D2744; }
+        
+        /* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .booking-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            padding: 40px;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+        
+        .booking-card h1 {
+            font-size: 28px;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .apartment-summary {
+            background: var(--summary-bg);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .apartment-summary h3 {
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .apartment-address {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .apartment-details {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .apartment-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--firebrick);
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .date-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 16px;
+            font-size: 15px;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            background: var(--card-bg);
+        }
+        
+        .total-price {
+            background: var(--total-bg);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .total-price span {
+            font-size: 14px;
+            opacity: 0.8;
+            color: var(--total-text);
+        }
+        
+        .total-price .amount {
+            font-size: 32px;
+            font-weight: 700;
+            display: block;
+            margin-top: 8px;
+            color: var(--total-text);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .book-btn, .cancel-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .book-btn {
+            background: var(--gradient-fire);
+            color: #0D2744;
+            box-shadow: 0 6px 20px rgba(255, 146, 154, 0.3);
+        }
+        
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(255, 146, 154, 0.5);
+        }
+        
+        .cancel-btn {
+            background: var(--input-border);
+            color: var(--text-secondary);
+        }
+        
+        .cancel-btn:hover {
+            background: var(--input-focus);
+            color: #0D2744;
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 60px;
+            background: var(--card-bg);
+            border-radius: 32px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            border: 1px solid var(--card-border);
+        }
+        
+        /* Модальное окно */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 32px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        
+        .modal-content .payment-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f59e0b;
+            margin: 10px 0;
+        }
+        
+        .modal-content .warning {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--card-border);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 60px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .modal-btn.confirm {
+            background: var(--gradient-fire);
+            color: #0D2744;
+        }
+        
+        .modal-btn.cancel {
+            background: var(--input-border);
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 640px) {
+            body { padding: 16px; }
+            .header { padding: 8px 20px; margin-bottom: 20px; }
+            .right-section { gap: 10px; }
+            .nav a { margin-right: 12px; font-size: 14px; }
+            .date-row { grid-template-columns: 1fr; gap: 0; }
+            .booking-card { padding: 30px 20px; }
+            .action-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+    <div class="bg-circle-3"></div>
+    <div class="bg-circle-4"></div>
+    <div class="bg-blob"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-grid-diagonal"></div>
+    
+    <div class="header">
+        <a href="/" class="logo">✦ Arenda</a>
+        <div class="right-section">
+            <div class="nav" id="nav"></div>
+            <div class="theme-switch">
+                <button class="theme-btn light active" id="lightModeBtn">☼</button>
+                <button class="theme-btn dark" id="darkModeBtn">☽</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="booking-card">
+            <h1>📅 Бронирование квартиры</h1>
+            <div id="apartmentInfo"><div class="loader">Загрузка информации о квартире...</div></div>
+            
+            <form id="bookingForm">
+                <div class="date-row">
+                    <div class="form-group">
+                        <label>📅 Дата заезда</label>
+                        <input type="date" id="checkIn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📅 Дата выезда</label>
+                        <input type="date" id="checkOut" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>💳 Способ оплаты</label>
+                    <select id="paymentMethod" required>
+                        <option value="">Выберите способ оплаты</option>
+                    </select>
+                </div>
+                
+                <div id="totalPrice" class="total-price">
+                    <span>Итого к оплате</span>
+                    <span class="amount" id="totalAmount">0 ₽</span>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="submit" class="book-btn">✅ Перейти к оплате</button>
+                    <a href="/" class="cancel-btn">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // --- ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ---
+        const lightModeBtn = document.getElementById('lightModeBtn');
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        
+        function updateThemeButtons(theme) {
+            if (theme === 'dark') {
+                lightModeBtn.classList.remove('active');
+                darkModeBtn.classList.add('active');
+            } else {
+                lightModeBtn.classList.add('active');
+                darkModeBtn.classList.remove('active');
+            }
+        }
+        
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThemeButtons('dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThemeButtons('light');
+            }
+        }
+        
+        lightModeBtn.addEventListener('click', () => setTheme('light'));
+        darkModeBtn.addEventListener('click', () => setTheme('dark'));
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            updateThemeButtons('dark');
+        } else {
+            updateThemeButtons('light');
+        }
+        
+        const API_URL = 'https://localhost:7151/api';
+        
+        function renderNav() {
+            const nav = document.getElementById('nav');
+            const token = localStorage.getItem('token');
+            const userName = localStorage.getItem('userName');
+            
+            if (token && userName) {
+                nav.innerHTML = `
+                    <a href="/">Поиск</a>
+                    <a href="/profile/">👤 Профиль</a>
+                    <button onclick="logout()" style="background: none; border: 1px solid var(--header-border); padding: 8px 20px; border-radius: 40px; color: var(--header-text); cursor: pointer;">Выйти</button>
+                `;
+            } else {
+                nav.innerHTML = `<a href="/">Поиск</a><a href="/login/">Вход</a><a href="/register/" class="btn" style="padding: 8px 20px; background: var(--gradient-fire); border-radius: 60px; color: #0D2744; text-decoration: none;">Регистрация</a>`;
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+        }
+        
+        renderNav();
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const apartmentId = urlParams.get('id');
+        const urlCheckIn = urlParams.get('checkIn');
+        const urlCheckOut = urlParams.get('checkOut');
+        
+        let apartment = null;
+        let pricePerDay = 0;
+        let paymentMethods = [];
+        
+        if (!apartmentId) {
+            window.location.href = '/';
+        }
+        
+        // Загрузка способов оплаты
+        async function loadPaymentMethods() {
+            try {
+                const response = await fetch(`${API_URL}/Payment/methods`);
+                if (response.ok) {
+                    paymentMethods = await response.json();
+                    const select = document.getElementById('paymentMethod');
+                    select.innerHTML = '<option value="">Выберите способ оплаты</option>';
+                    paymentMethods.forEach(method => {
+                        select.innerHTML += `<option value="${method.id}">${method.name}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки способов оплаты:', error);
+                const select = document.getElementById('paymentMethod');
+                select.innerHTML = `
+                    <option value="">Выберите способ оплаты</option>
+                    <option value="1">Банковская карта</option>
+                    <option value="2">Наличные</option>
+                    <option value="3">Банковский перевод</option>
+                `;
+            }
+        }
+        
+        async function loadApartment() {
+            const container = document.getElementById('apartmentInfo');
+            container.innerHTML = '<div class="loader">Загрузка квартиры...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/Apartments/${apartmentId}`);
+                if (!response.ok) throw new Error('Квартира не найдена');
+                apartment = await response.json();
+                pricePerDay = apartment.price;
+                
+                container.innerHTML = `
+                    <div class="apartment-summary">
+                        <h3>${escapeHtml(apartment.address)}</h3>
+                        <div class="apartment-address">📍 ${escapeHtml(apartment.cityName)}, ${escapeHtml(apartment.address)}</div>
+                        <div class="apartment-details">${apartment.rooms} комн. • ${apartment.area} м²</div>
+                        <div class="apartment-price">${pricePerDay.toLocaleString()} ₽/сутки</div>
+                        ${apartment.deposit ? `<div style="margin-top: 8px; color: var(--text-secondary);">💰 Залог: ${apartment.deposit.toLocaleString()} ₽</div>` : ''}
+                    </div>
+                `;
+                
+                const today = new Date().toISOString().split('T')[0];
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                
+                const checkInInput = document.getElementById('checkIn');
+                const checkOutInput = document.getElementById('checkOut');
+                
+                checkInInput.min = today;
+                checkOutInput.min = tomorrowStr;
+                
+                if (urlCheckIn && urlCheckOut) {
+                    checkInInput.value = urlCheckIn;
+                    checkOutInput.value = urlCheckOut;
+                } else {
+                    checkInInput.value = tomorrowStr;
+                    checkOutInput.value = tomorrowStr;
+                }
+                
+                checkInInput.addEventListener('change', calculateTotal);
+                checkOutInput.addEventListener('change', calculateTotal);
+                calculateTotal();
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                container.innerHTML = `<div class="apartment-summary" style="color: #dc2626;">❌ Ошибка загрузки квартиры: ${error.message}</div>`;
+            }
+        }
+        
+        function calculateTotal() {
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+            
+            if (!checkIn || !checkOut) return;
+            
+            const start = new Date(checkIn);
+            const end = new Date(checkOut);
+            const days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+            
+            const total = days * pricePerDay;
+            document.getElementById('totalAmount').textContent = `${total.toLocaleString()} ₽ (${days} суток)`;
+            return { days, total };
+        }
+        
+        // Шуточное модальное окно оплаты
+        function showPaymentModal(amount, paymentMethodName, onSuccess) {
+            const modalHtml = `
+                <div id="paymentModal" class="modal">
+                    <div class="modal-content">
+                        <h3>💳 Шуточная оплата</h3>
+                        <p>Способ оплаты: <strong>${paymentMethodName}</strong></p>
+                        <div class="payment-amount">${amount.toLocaleString()} ₽</div>
+                        <p>💡 <strong>Внимание!</strong> Это демонстрационный режим.</p>
+                        <p>В реальном проекте здесь будет интеграция с платёжной системой.</p>
+                        <div class="warning">
+                            🔐 Тестовый платёж. Никакие средства не будут списаны.
+                        </div>
+                        <div class="modal-buttons">
+                            <button class="modal-btn confirm" id="confirmPayment">✅ Оплатить</button>
+                            <button class="modal-btn cancel" id="cancelPayment">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            document.getElementById('confirmPayment').addEventListener('click', () => {
+                document.getElementById('paymentModal').remove();
+                onSuccess(true);
+            });
+            
+            document.getElementById('cancelPayment').addEventListener('click', () => {
+                document.getElementById('paymentModal').remove();
+                onSuccess(false);
+            });
+            
+            document.getElementById('paymentModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('paymentModal')) {
+                    document.getElementById('paymentModal').remove();
+                    onSuccess(false);
+                }
+            });
+        }
+        
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = localStorage.getItem('token')?.trim();
+            if (!token) {
+                alert('Для бронирования необходимо войти в аккаунт');
+                window.location.href = '/login/';
+                return;
+            }
+            
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+            const paymentMethodId = document.getElementById('paymentMethod').value;
+            const paymentMethodName = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex]?.text;
+            
+            if (!checkIn || !checkOut) {
+                alert('Пожалуйста, выберите даты');
+                return;
+            }
+            
+            if (!paymentMethodId) {
+                alert('Пожалуйста, выберите способ оплаты');
+                return;
+            }
+            
+            const start = new Date(checkIn);
+            const end = new Date(checkOut);
+            const days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+            const totalAmount = days * pricePerDay;
+            
+            const btn = document.querySelector('.book-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Проверка...';
+            btn.disabled = true;
+            
+            try {
+                // Проверяем доступность
+                const checkResponse = await fetch(`${API_URL}/Bookings/check-availability?apartmentId=${apartmentId}&checkIn=${checkIn}&checkOut=${checkOut}`);
+                const checkData = await checkResponse.json();
+                
+                if (!checkData.available) {
+                    alert('❌ Квартира уже забронирована на выбранные даты');
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+                
+                // Показываем шуточное окно оплаты
+                showPaymentModal(totalAmount, paymentMethodName, async (paid) => {
+                    if (paid) {
+                        btn.textContent = 'Создание бронирования...';
+                        
+                        const response = await fetch(`${API_URL}/Bookings`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                apartmentId: parseInt(apartmentId),
+                                checkIn: checkIn,
+                                checkOut: checkOut
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            alert(`✅ Бронирование успешно создано!\n💳 Оплачено: ${totalAmount.toLocaleString()} ₽\n💰 Способ оплаты: ${paymentMethodName}\n\n🔐 Это демонстрационная оплата, реальные средства не списаны.`);
+                            window.location.href = '/my-bookings/';
+                        } else {
+                            alert('❌ Ошибка: ' + (data.message || 'Не удалось забронировать'));
+                        }
+                    }
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                });
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('❌ Ошибка соединения с сервером');
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        });
+        
+        loadApartment();
+        loadPaymentMethods();
+        
+        window.logout = logout;
+    </script>
+</body>
+</html>

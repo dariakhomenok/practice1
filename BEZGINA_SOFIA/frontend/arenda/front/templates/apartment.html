@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arenda | Квартира</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* --- ПАЛИТРА (Tangaroa + Firebrick) --- */
+        :root {
+            --tangaroa: #0D2744;
+            --wedgewood: #53728A;
+            --shipcove: #7691AD;
+            --spindle: #B9CFDD;
+            --firebrick: #FF929A;
+            --firebrick-hover: #e07a83;
+            --white: #FFFFFF;
+            --text-dark: #1a2a3a;
+            --text-light: #6a7f8f;
+            --shadow-sm: 0 8px 20px rgba(13, 39, 68, 0.06);
+            --shadow-md: 0 12px 28px rgba(13, 39, 68, 0.1);
+            --shadow-lg: 0 20px 35px -10px rgba(13, 39, 68, 0.15);
+            --gradient-fire: linear-gradient(135deg, #FF929A 0%, #f07a83 100%);
+            
+            /* Светлая тема */
+            --bg-body: #B9CFDD;
+            --bg-gradient-start: #d4e5f0;
+            --bg-gradient-mid: #B9CFDD;
+            --bg-gradient-end: #a8c0ce;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 146, 154, 0.25);
+            --text-primary: #1a2a3a;
+            --text-secondary: #6a7f8f;
+            --input-bg: #f9fafb;
+            --input-border: #e5e7eb;
+            --input-focus: #FF929A;
+            --amenity-bg: #f3f4f6;
+            --amenity-color: #4b5563;
+            --checkbox-accent: #0D2744;
+            --sun-icon-color: #B9CFDD;
+            --moon-icon-color: #B9CFDD;
+            --header-bg: rgba(13, 39, 68, 0.85);
+            --header-text: rgba(185, 207, 221, 0.9);
+            --header-border: rgba(255, 255, 255, 0.1);
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #B9CFDD 100%);
+            --select-text: #1a2a3a;
+            --select-option-bg: #ffffff;
+        }
+        
+        /* Тёмная тема */
+        body.dark {
+            --bg-body: #0D2744;
+            --bg-gradient-start: #1a3a5a;
+            --bg-gradient-mid: #0D2744;
+            --bg-gradient-end: #06152a;
+            --card-bg: rgba(58, 90, 122, 0.95);
+            --card-border: rgba(255, 146, 154, 0.35);
+            --text-primary: #FFFFFF;
+            --text-secondary: #c0d0e0;
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.2);
+            --input-focus: #FF929A;
+            --amenity-bg: rgba(255, 255, 255, 0.1);
+            --amenity-color: #c0d0e0;
+            --checkbox-accent: #FF929A;
+            --sun-icon-color: #0D2744;
+            --moon-icon-color: #0D2744;
+            --header-bg: rgba(185, 207, 221, 0.95);
+            --header-text: #0D2744;
+            --header-border: rgba(13, 39, 68, 0.15);
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #0D2744 100%);
+            --select-text: #1a2a3a;
+            --select-option-bg: #3a5a7a;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+        
+        /* --- ЖИВОЙ ФОН --- */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 40%, var(--bg-gradient-end) 100%);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-1 {
+            position: fixed;
+            top: -150px;
+            right: -100px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.25) 0%, rgba(255, 146, 154, 0.05) 60%, rgba(255, 146, 154, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 18s ease-in-out infinite;
+        }
+        
+        .bg-circle-2 {
+            position: fixed;
+            bottom: -120px;
+            left: -80px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(13, 39, 68, 0.15) 0%, rgba(13, 39, 68, 0.05) 60%, rgba(13, 39, 68, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float2 22s ease-in-out infinite;
+        }
+        
+        .bg-circle-3 {
+            position: fixed;
+            top: 40%;
+            left: -50px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(83, 114, 138, 0.2) 0%, rgba(83, 114, 138, 0.05) 60%, rgba(83, 114, 138, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float3 15s ease-in-out infinite;
+        }
+        
+        .bg-circle-4 {
+            position: fixed;
+            bottom: 20%;
+            right: 15%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.2) 0%, rgba(255, 146, 154, 0.02) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 25s ease-in-out infinite reverse;
+        }
+        
+        .bg-blob {
+            position: fixed;
+            bottom: 5%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.15) 0%, rgba(255, 146, 154, 0) 70%);
+            border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%;
+            z-index: 0;
+            animation: morph 15s ease-in-out infinite;
+        }
+        
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+        
+        .bg-grid-diagonal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(45deg, rgba(13, 39, 68, 0.05) 0px, rgba(13, 39, 68, 0.05) 1px, transparent 1px, transparent 30px);
+            z-index: 0;
+        }
+        
+        body.dark .bg-grid {
+            background-image: 
+                linear-gradient(rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px);
+        }
+        
+        body.dark .bg-grid-diagonal {
+            background-image: repeating-linear-gradient(45deg, rgba(185, 207, 221, 0.08) 0px, rgba(185, 207, 221, 0.08) 1px, transparent 1px, transparent 30px);
+        }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -20px) scale(1.05); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.08); }
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 40px); }
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%; }
+            50% { border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%; }
+        }
+        
+        /* --- ШАПКА --- */
+        .header {
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 80px;
+            padding: 10px 30px;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--header-border);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo { 
+            font-size: 28px; 
+            font-weight: 800; 
+            background: var(--logo-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav { display: flex; gap: 20px; align-items: center; }
+        .nav a { color: var(--header-text); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+        .nav a:hover { color: var(--firebrick); }
+        
+        /* --- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ --- */
+        .theme-switch {
+            display: flex;
+            gap: 4px;
+            background: rgba(13, 39, 68, 0.15);
+            border-radius: 60px;
+            padding: 4px;
+        }
+        
+        body.dark .theme-switch {
+            background: rgba(185, 207, 221, 0.2);
+        }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+        }
+        
+        .theme-btn.light { color: var(--sun-icon-color); background: transparent; }
+        .theme-btn.dark { color: var(--moon-icon-color); background: transparent; }
+        .theme-btn.light.active { background: var(--gradient-fire); color: #0D2744; }
+        .theme-btn.dark.active { background: var(--gradient-fire); color: #0D2744; }
+        
+        /* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .apartment-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+        
+        /* ГАЛЕРЕЯ */
+        .gallery {
+            display: flex;
+            gap: 12px;
+            background: rgba(0,0,0,0.05);
+            padding: 12px;
+        }
+        .main-photo-container {
+            flex: 3;
+            position: relative;
+        }
+        .main-photo {
+            width: 100%;
+            height: 450px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: var(--input-bg);
+            border-radius: 16px;
+        }
+        .reset-main-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        .reset-main-btn:hover { background: rgba(0,0,0,0.9); transform: scale(1.02); }
+        .thumbnails-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            max-height: 450px;
+        }
+        .thumbnail {
+            width: 100%;
+            aspect-ratio: 1 / 0.8;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: var(--input-bg);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .thumbnail:hover { transform: scale(1.02); border-color: var(--firebrick); }
+        .thumbnail.active { border-color: var(--firebrick); box-shadow: 0 0 0 2px var(--firebrick); }
+        
+        .apartment-info {
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+        }
+        @media (max-width: 900px) { .apartment-info { grid-template-columns: 1fr; } }
+        
+        .apartment-header h1 { font-size: 28px; color: var(--text-primary); margin-bottom: 8px; }
+        .address { color: var(--text-secondary); font-size: 15px; margin-bottom: 12px; }
+        .price-value { font-size: 32px; font-weight: 700; color: var(--firebrick); margin-bottom: 20px; }
+        .price-value small { font-size: 16px; font-weight: normal; }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 24px 0;
+            border-top: 2px solid var(--card-border);
+            border-bottom: 2px solid var(--card-border);
+            margin-bottom: 24px;
+        }
+        .feature { display: flex; align-items: center; gap: 8px; }
+        .feature-icon { font-size: 24px; }
+        
+        .section { margin-bottom: 32px; }
+        .section-title { font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
+        .description { color: var(--text-secondary); line-height: 1.6; }
+        
+        .amenities { display: flex; flex-wrap: wrap; gap: 12px; }
+        .amenity { background: var(--amenity-bg); padding: 8px 16px; border-radius: 60px; font-size: 14px; color: var(--amenity-color); }
+        
+        .rules { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+        .rule { padding: 8px 16px; border-radius: 60px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .rule.allowed { background: #dcfce7; color: #166534; }
+        .rule.not-allowed { background: #fee2e2; color: #dc2626; }
+        body.dark .rule.allowed { background: rgba(34,197,94,0.2); color: #4ade80; }
+        body.dark .rule.not-allowed { background: rgba(239,68,68,0.2); color: #f87171; }
+        
+        .landlord-card {
+            background: var(--input-bg);
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .landlord-info { display: flex; align-items: center; gap: 16px; }
+        .landlord-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-fire);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0D2744;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .contact-btn, .booking-btn {
+            padding: 12px 24px;
+            background: var(--gradient-fire);
+            border: none;
+            border-radius: 60px;
+            color: #0D2744;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .contact-btn:hover, .booking-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px -8px rgba(255,146,154,0.4); }
+        .booking-btn { width: calc(100% - 64px); margin: 0 32px 32px 32px; }
+        
+        /* КАЛЕНДАРЬ */
+        .calendar-card {
+            background: var(--input-bg);
+            border-radius: 24px;
+            padding: 20px;
+            height: fit-content;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .calendar-header button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 30px;
+            color: var(--text-primary);
+        }
+        .calendar-header button:hover { background: var(--card-border); }
+        .calendar-header h3 { font-size: 18px; color: var(--text-primary); font-weight: 600; }
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .calendar-day:hover:not(.busy):not(.disabled) { background: var(--card-border); }
+        .calendar-day.busy { background: rgba(239,68,68,0.2); color: #f87171; text-decoration: line-through; cursor: not-allowed; }
+        .calendar-day.selected { background: var(--gradient-fire); color: #0D2744; }
+        .calendar-day.today { border: 2px solid var(--firebrick); font-weight: 700; }
+        .calendar-day.disabled { color: var(--text-secondary); opacity: 0.5; cursor: not-allowed; }
+        
+        .date-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--card-border);
+        }
+        .date-inputs input {
+            flex: 1;
+            padding: 10px 12px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 30px;
+            font-size: 13px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        .date-inputs input:focus { outline: none; border-color: var(--input-focus); }
+        
+        .calendar-legend {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            justify-content: center;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .legend-dot.busy { background: rgba(239,68,68,0.2); border: 1px solid #f87171; }
+        .legend-dot.selected { background: var(--gradient-fire); }
+        .legend-dot.available { background: var(--card-border); }
+        
+        /* ОТЗЫВЫ */
+        .star-rating { display: flex; gap: 8px; font-size: 32px; cursor: pointer; }
+        .star-rating .star { cursor: pointer; transition: all 0.2s; color: #d1d5db; }
+        .star-rating .star:hover, .star-rating .star.active { color: #f59e0b; }
+        .stars-static { font-size: 20px; letter-spacing: 4px; color: #f59e0b; }
+        
+        .review-card {
+            background: var(--input-bg);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+        .review-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .review-user { display: flex; align-items: center; gap: 12px; }
+        .review-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-fire);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0D2744;
+            font-weight: 600;
+        }
+        .review-user-name { font-weight: 600; color: var(--text-primary); }
+        .review-stars { color: #f59e0b; font-size: 16px; letter-spacing: 2px; }
+        .review-date { font-size: 12px; color: var(--text-secondary); }
+        .review-text { color: var(--text-secondary); line-height: 1.5; margin-top: 8px; }
+        
+        .no-reviews {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            background: var(--input-bg);
+            border-radius: 20px;
+        }
+        
+        .reviews-section { padding: 0 32px 32px 32px; border-top: 2px solid var(--card-border); margin-top: 20px; }
+        .reviews-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 24px; margin-top: 24px; }
+        .rating-summary { display: flex; align-items: center; gap: 15px; }
+        .average-rating { font-size: 36px; font-weight: 700; color: #f59e0b; }
+        .review-form-container { background: var(--input-bg); border-radius: 24px; padding: 24px; margin-bottom: 32px; display: none; }
+        .booking-select {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 60px;
+            background: var(--card-bg);
+            border-radius: 32px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .booking-info {
+            margin-top: 15px;
+            padding: 12px;
+            background: var(--gradient-fire);
+            border-radius: 16px;
+            text-align: center;
+            color: #0D2744;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .header { padding: 8px 20px; margin-bottom: 20px; }
+            .right-section { gap: 10px; }
+            .nav a { margin-right: 12px; font-size: 14px; }
+            .gallery { flex-direction: column; }
+            .thumbnails-container { flex-direction: row; max-height: 100px; }
+            .thumbnail { width: 80px; }
+            .apartment-info { padding: 20px; }
+            .booking-btn { width: calc(100% - 40px); margin: 0 20px 20px 20px; }
+            .reviews-section { padding: 0 20px 20px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+    <div class="bg-circle-3"></div>
+    <div class="bg-circle-4"></div>
+    <div class="bg-blob"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-grid-diagonal"></div>
+    
+    <div class="header">
+        <a href="/" class="logo">✦ Arenda</a>
+        <div class="right-section">
+            <div class="nav" id="nav"></div>
+            <div class="theme-switch">
+                <button class="theme-btn light active" id="lightModeBtn">☼</button>
+                <button class="theme-btn dark" id="darkModeBtn">☽</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div id="apartmentContent">
+            <div class="loader">Загрузка квартиры...</div>
+        </div>
+    </div>
+    
+    <script>
+        // --- ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ---
+        const lightModeBtn = document.getElementById('lightModeBtn');
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        
+        function updateThemeButtons(theme) {
+            if (theme === 'dark') {
+                lightModeBtn.classList.remove('active');
+                darkModeBtn.classList.add('active');
+            } else {
+                lightModeBtn.classList.add('active');
+                darkModeBtn.classList.remove('active');
+            }
+        }
+        
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThemeButtons('dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThemeButtons('light');
+            }
+        }
+        
+        lightModeBtn.addEventListener('click', () => setTheme('light'));
+        darkModeBtn.addEventListener('click', () => setTheme('dark'));
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            updateThemeButtons('dark');
+        } else {
+            updateThemeButtons('light');
+        }
+        
+        const API_URL = 'https://localhost:7151/api';
+        const BACKEND_URL = 'https://localhost:7151';
+        
+        // Получаем ID квартиры из URL (Django передаёт как {{ apartment_id }})
+        const apartmentId = {{ apartment_id }};
+        
+        function renderNav() {
+            const nav = document.getElementById('nav');
+            const token = localStorage.getItem('token');
+            const userName = localStorage.getItem('userName');
+            
+            if (token && userName) {
+                nav.innerHTML = `
+                    <a href="/">Поиск</a>
+                    <a href="/profile/">👤 Профиль</a>
+                    <button onclick="logout()" style="background: none; border: 1px solid var(--header-border); padding: 8px 20px; border-radius: 40px; color: var(--header-text); cursor: pointer;">Выйти</button>
+                `;
+            } else {
+                nav.innerHTML = `<a href="/">Поиск</a><a href="/login/">Вход</a><a href="/register/" class="btn" style="padding: 8px 20px; background: var(--gradient-fire); border-radius: 60px; color: #0D2744; text-decoration: none;">Регистрация</a>`;
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+        }
+        
+        renderNav();
+        
+        if (!apartmentId) {
+            window.location.href = '/';
+        }
+        
+        let busyDates = new Set();
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+        let selectedCheckIn = null;
+        let selectedCheckOut = null;
+        let apartmentData = null;
+        let selectedRating = 0;
+        let currentReviews = [];
+        let currentRating = { averageRating: 0, totalReviews: 0 };
+        let completedBookings = [];
+        let selectedBookingId = null;
+        let defaultMainPhotoUrl = '';
+        
+        // ========== ФУНКЦИЯ ДЛЯ ПРАВИЛЬНОГО ПАРСИНГА ДАТЫ (БЕЗ СМЕЩЕНИЯ) ==========
+        function parseLocalDate(dateString) {
+            const [year, month, day] = dateString.split('-');
+            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        }
+        
+        // ========== ФУНКЦИЯ ДЛЯ ФОРМАТИРОВАНИЯ ДАТЫ В YYYY-MM-DD ==========
+        function formatLocalDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        async function loadBusyDates() {
+            try {
+                const response = await fetch(`${API_URL}/Apartments/${apartmentId}/busy-dates?year=${currentYear}&month=${currentMonth + 1}`);
+                if (response.ok) {
+                    const dates = await response.json();
+                    busyDates = new Set(dates);
+                }
+            } catch (error) {
+                console.log('Ошибка загрузки занятых дат:', error);
+            }
+        }
+        
+        async function loadReviewsAndRating() {
+            try {
+                const response = await fetch(`${API_URL}/Reviews/apartment/${apartmentId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    currentRating = data.rating || { averageRating: 0, totalReviews: 0 };
+                    currentReviews = data.reviews || [];
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки отзывов:', error);
+            }
+        }
+        
+        async function loadCompletedBookings() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            try {
+                const response = await fetch(`${API_URL}/Bookings/my-completed?apartmentId=${apartmentId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    completedBookings = await response.json();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки бронирований:', error);
+            }
+        }
+        
+        function renderStaticStars(rating) {
+            const fullStars = Math.round(rating);
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                starsHtml += i <= fullStars ? '★' : '☆';
+            }
+            return starsHtml;
+        }
+        
+        function renderReviews() {
+            if (!currentReviews || currentReviews.length === 0) {
+                return '<div class="no-reviews">✨ Пока нет отзывов. Будьте первым!</div>';
+            }
+            return currentReviews.map(review => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-user">
+                            <div class="review-avatar">${(review.userName?.charAt(0) || 'П')}</div>
+                            <div>
+                                <div class="review-user-name">${escapeHtml(review.userName || 'Пользователь')}</div>
+                                <div class="review-stars">${'★'.repeat(review.otsenka)}${'☆'.repeat(5 - review.otsenka)}</div>
+                            </div>
+                        </div>
+                        <div class="review-date">${review.date ? new Date(review.date).toLocaleDateString('ru-RU') : ''}</div>
+                    </div>
+                    <div class="review-text">${escapeHtml(review.tekstOtzyva || '')}</div>
+                </div>
+            `).join('');
+        }
+        
+        function resetMainPhoto() {
+            if (defaultMainPhotoUrl) {
+                const mainPhotoDiv = document.getElementById('mainPhoto');
+                if (mainPhotoDiv) {
+                    mainPhotoDiv.style.backgroundImage = `url('${defaultMainPhotoUrl}')`;
+                }
+                document.querySelectorAll('.thumbnail').forEach(thumb => {
+                    thumb.classList.remove('active');
+                });
+            }
+        }
+        
+        function setMainPhoto(url, element) {
+            const mainPhotoDiv = document.getElementById('mainPhoto');
+            if (mainPhotoDiv) {
+                mainPhotoDiv.style.backgroundImage = `url('${BACKEND_URL}${url}')`;
+            }
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+        }
+        
+        // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ВЫБОРА ДАТЫ ==========
+        function selectDate(dateStr) {
+            const selectedDate = parseLocalDate(dateStr);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (selectedDate < today) {
+                alert('❌ Нельзя выбрать прошедшую дату');
+                return;
+            }
+            
+            if (!selectedCheckIn) {
+                selectedCheckIn = dateStr;
+                selectedCheckOut = null;
+            }
+            else if (selectedCheckIn && !selectedCheckOut) {
+                const checkInDate = parseLocalDate(selectedCheckIn);
+                
+                if (selectedDate < checkInDate) {
+                    selectedCheckIn = dateStr;
+                } 
+                else if (selectedDate > checkInDate) {
+                    selectedCheckOut = dateStr;
+                }
+            }
+            else if (selectedCheckIn && selectedCheckOut) {
+                selectedCheckIn = dateStr;
+                selectedCheckOut = null;
+            }
+            
+            renderCalendar();
+            
+            if (selectedCheckIn && selectedCheckOut && apartmentData) {
+                const checkInDate = parseLocalDate(selectedCheckIn);
+                const checkOutDate = parseLocalDate(selectedCheckOut);
+                const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+                
+                if (nights > 0) {
+                    const total = nights * apartmentData.price;
+                    const infoDiv = document.getElementById('bookingInfo');
+                    if (infoDiv) {
+                        infoDiv.innerHTML = `
+                            <div class="booking-info">
+                                🏠 ${nights} ночей · ${total.toLocaleString()} ₽
+                            </div>
+                        `;
+                    }
+                }
+            }
+        }
+        
+        // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ОТРИСОВКИ КАЛЕНДАРЯ ==========
+        function renderCalendar() {
+            if (!apartmentData) return;
+            
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startOffset = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+            const daysInMonth = lastDay.getDate();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayStr = formatLocalDate(today);
+            
+            const days = [];
+            for (let i = 0; i < startOffset; i++) days.push(null);
+            for (let d = 1; d <= daysInMonth; d++) days.push(new Date(currentYear, currentMonth, d));
+            
+            const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+            
+            const calendarHtml = `
+                <div class="calendar-card">
+                    <div class="calendar-header">
+                        <button onclick="changeMonth(-1)">←</button>
+                        <h3>${monthNames[currentMonth]} ${currentYear}</h3>
+                        <button onclick="changeMonth(1)">→</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+                    </div>
+                    <div class="calendar-days">
+                        ${days.map(day => {
+                            if (!day) return `<div class="calendar-day disabled"></div>`;
+                            const dateStr = formatLocalDate(day);
+                            const isBusy = busyDates.has(dateStr);
+                            const isSelected = selectedCheckIn === dateStr || selectedCheckOut === dateStr;
+                            const isToday = dateStr === todayStr;
+                            const isPast = day < today;
+                            let classes = 'calendar-day';
+                            if (isBusy) classes += ' busy';
+                            if (isSelected) classes += ' selected';
+                            if (isToday && !isBusy) classes += ' today';
+                            if (isPast) classes += ' disabled';
+                            const clickable = !isBusy && !isPast;
+                            return `<div class="${classes}" onclick="${clickable ? `selectDate('${dateStr}')` : ''}">${day.getDate()}</div>`;
+                        }).join('')}
+                    </div>
+                    <div class="date-inputs">
+                        <input type="date" id="checkIn" value="${selectedCheckIn || ''}" placeholder="📅 Заезд">
+                        <input type="date" id="checkOut" value="${selectedCheckOut || ''}" placeholder="📅 Выезд">
+                    </div>
+                    <div class="calendar-legend">
+                        <span><span class="legend-dot available"></span> Свободно</span>
+                        <span><span class="legend-dot busy"></span> Занято</span>
+                        <span><span class="legend-dot selected"></span> Выбрано</span>
+                    </div>
+                    <div id="bookingInfo"></div>
+                </div>
+            `;
+            
+            document.getElementById('calendarContainer').innerHTML = calendarHtml;
+            
+            const checkInInput = document.getElementById('checkIn');
+            const checkOutInput = document.getElementById('checkOut');
+            
+            if (checkInInput) {
+                checkInInput.addEventListener('change', (e) => {
+                    const newCheckIn = e.target.value;
+                    if (newCheckIn) {
+                        selectedCheckIn = newCheckIn;
+                        if (selectedCheckOut && parseLocalDate(selectedCheckOut) <= parseLocalDate(selectedCheckIn)) {
+                            alert('❌ Дата выезда должна быть позже даты заезда!');
+                            selectedCheckOut = null;
+                        }
+                        renderCalendar();
+                    }
+                });
+            }
+            if (checkOutInput) {
+                checkOutInput.addEventListener('change', (e) => {
+                    const newCheckOut = e.target.value;
+                    if (newCheckOut && selectedCheckIn) {
+                        if (parseLocalDate(newCheckOut) <= parseLocalDate(selectedCheckIn)) {
+                            alert('❌ Дата выезда должна быть позже даты заезда!');
+                            e.target.value = '';
+                        } else {
+                            selectedCheckOut = newCheckOut;
+                            renderCalendar();
+                        }
+                    }
+                });
+            }
+            
+            if (selectedCheckIn && selectedCheckOut && apartmentData) {
+                const checkInDate = parseLocalDate(selectedCheckIn);
+                const checkOutDate = parseLocalDate(selectedCheckOut);
+                const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+                
+                if (nights > 0) {
+                    const total = nights * apartmentData.price;
+                    const infoDiv = document.getElementById('bookingInfo');
+                    if (infoDiv) {
+                        infoDiv.innerHTML = `
+                            <div class="booking-info">
+                                🏠 ${nights} ночей · ${total.toLocaleString()} ₽
+                            </div>
+                        `;
+                    }
+                }
+            }
+        }
+        
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            loadBusyDates().then(() => renderCalendar());
+        }
+        
+        function initStarRating() {
+            const stars = document.querySelectorAll('.star-rating .star');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.dataset.rating);
+                    stars.forEach(s => {
+                        s.classList.remove('active');
+                        s.textContent = '☆';
+                    });
+                    for (let i = 0; i < selectedRating; i++) {
+                        stars[i].classList.add('active');
+                        stars[i].textContent = '★';
+                    }
+                });
+            });
+        }
+        
+        async function submitReview() {
+            const token = localStorage.getItem('token');
+            if (!selectedBookingId) {
+                document.getElementById('reviewMessage').innerHTML = '<span style="color: #dc2626;">❌ Пожалуйста, выберите бронирование</span>';
+                return;
+            }
+            if (selectedRating === 0) {
+                document.getElementById('reviewMessage').innerHTML = '<span style="color: #dc2626;">❌ Пожалуйста, поставьте оценку</span>';
+                return;
+            }
+            const text = document.getElementById('reviewText').value.trim();
+            if (!text) {
+                document.getElementById('reviewMessage').innerHTML = '<span style="color: #dc2626;">❌ Пожалуйста, напишите отзыв</span>';
+                return;
+            }
+            
+            document.getElementById('reviewMessage').innerHTML = '<span style="color: #f59e0b;">⏳ Отправка...</span>';
+            
+            try {
+                const response = await fetch(`${API_URL}/Reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        bronirovaniyeId: selectedBookingId,
+                        ratingId: selectedRating,
+                        text: text
+                    })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('reviewMessage').innerHTML = '<span style="color: #10b981;">✅ Отзыв отправлен на модерацию!</span>';
+                    document.getElementById('reviewText').value = '';
+                    selectedRating = 0;
+                    selectedBookingId = null;
+                    document.querySelectorAll('.star-rating .star').forEach(s => {
+                        s.classList.remove('active');
+                        s.textContent = '☆';
+                    });
+                    const bookingSelect = document.getElementById('bookingSelect');
+                    if (bookingSelect) bookingSelect.value = '';
+                    setTimeout(() => {
+                        loadReviewsAndRating();
+                        loadCompletedBookings();
+                        renderApartment();
+                    }, 2000);
+                } else {
+                    const error = await response.json();
+                    document.getElementById('reviewMessage').innerHTML = `<span style="color: #dc2626;">❌ ${error.message || 'Ошибка'}</span>`;
+                }
+            } catch (error) {
+                document.getElementById('reviewMessage').innerHTML = '<span style="color: #dc2626;">❌ Ошибка сервера</span>';
+            }
+        }
+        
+        function contactLandlord(phone, email) {
+            alert(`Связаться с владельцем:\nТелефон: ${phone || 'не указан'}\nEmail: ${email || 'не указан'}`);
+        }
+        
+        function bookApartment() {
+            const token = localStorage.getItem('token');
+            
+            if (!selectedCheckIn || !selectedCheckOut) {
+                alert('❌ Пожалуйста, выберите даты заезда и выезда на календаре');
+                return;
+            }
+            
+            const checkInDate = parseLocalDate(selectedCheckIn);
+            const checkOutDate = parseLocalDate(selectedCheckOut);
+            
+            if (checkOutDate <= checkInDate) {
+                alert('❌ Дата выезда должна быть позже даты заезда!');
+                return;
+            }
+            
+            if (!token) {
+                alert('Для бронирования необходимо войти в аккаунт');
+                window.location.href = '/login/';
+                return;
+            }
+            
+            window.location.href = `/booking/?id=${apartmentId}&checkIn=${selectedCheckIn}&checkOut=${selectedCheckOut}`;
+        }
+        
+        function renderApartment() {
+            const apt = apartmentData;
+            const container = document.getElementById('apartmentContent');
+            
+            let mainPhoto = null;
+            let otherPhotos = [];
+            
+            if (apt.photos && apt.photos.length > 0) {
+                mainPhoto = apt.photos.find(p => p.order === 0) || apt.photos[0];
+                otherPhotos = apt.photos.filter(p => p.id !== mainPhoto.id);
+                defaultMainPhotoUrl = `${BACKEND_URL}${mainPhoto.url}`;
+            }
+            
+            let galleryHtml = '';
+            if (apt.photos && apt.photos.length > 0) {
+                galleryHtml = `
+                    <div class="gallery">
+                        <div class="main-photo-container">
+                            <div class="main-photo" id="mainPhoto" style="background-image: url('${BACKEND_URL}${mainPhoto.url}'); background-size: contain;"></div>
+                            <button class="reset-main-btn" onclick="resetMainPhoto()">↺ Вернуть главное фото</button>
+                        </div>
+                        <div class="thumbnails-container">
+                            ${otherPhotos.map(photo => `
+                                <div class="thumbnail" style="background-image: url('${BACKEND_URL}${photo.url}'); background-size: cover;" onclick="setMainPhoto('${photo.url}', this)"></div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                galleryHtml = `
+                    <div class="gallery">
+                        <div class="main-photo-container">
+                            <div class="main-photo" style="display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--text-secondary);">📷 Фото отсутствуют</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            const amenities = [];
+            if (apt.furniture) amenities.push('🛋️ Мебель');
+            if (apt.appliances) amenities.push('🔧 Техника');
+            if (apt.internet) amenities.push('📶 Wi-Fi');
+            if (apt.parking) amenities.push('🚗 Парковка');
+            if (apt.elevator) amenities.push('🛗 Лифт');
+            if (apt.balcony) amenities.push('🌞 Балкон');
+            
+            const rules = [];
+            if (apt.petsAllowed) rules.push({ text: 'Можно с животными', icon: '🐾', allowed: true });
+            if (apt.childrenAllowed) rules.push({ text: 'Можно с детьми', icon: '👶', allowed: true });
+            if (apt.smokingAllowed) rules.push({ text: 'Можно курить', icon: '🚬', allowed: true });
+            if (!apt.smokingAllowed) rules.push({ text: 'Не курить', icon: '🚭', allowed: false });
+            
+            let reviewFormHtml = '';
+            const token = localStorage.getItem('token');
+            if (token) {
+                if (completedBookings.length > 0) {
+                    const bookingOptions = completedBookings.map(b => `
+                        <option value="${b.id}">${b.apartmentAddress} — ${new Date(b.checkIn).toLocaleDateString('ru-RU')} до ${new Date(b.checkOut).toLocaleDateString('ru-RU')}</option>
+                    `).join('');
+                    reviewFormHtml = `
+                        <div class="review-form-container" id="reviewForm" style="display: block;">
+                            <h4 style="margin-bottom: 16px; color: var(--text-primary);">📝 Оставить отзыв</h4>
+                            <select id="bookingSelect" class="booking-select">
+                                <option value="">Выберите бронирование</option>
+                                ${bookingOptions}
+                            </select>
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-primary);">Ваша оценка:</label>
+                                <div class="star-rating">
+                                    <span data-rating="1" class="star">☆</span>
+                                    <span data-rating="2" class="star">☆</span>
+                                    <span data-rating="3" class="star">☆</span>
+                                    <span data-rating="4" class="star">☆</span>
+                                    <span data-rating="5" class="star">☆</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-primary);">Ваш отзыв:</label>
+                                <textarea id="reviewText" rows="4" style="width: 100%; padding: 12px; background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 16px; color: var(--text-primary); resize: vertical;"></textarea>
+                            </div>
+                            <button id="submitReviewBtn" style="padding: 12px 24px; background: var(--gradient-fire); border: none; border-radius: 60px; color: #0D2744; font-weight: 600; cursor: pointer;">📝 Отправить отзыв</button>
+                            <div id="reviewMessage" style="margin-top: 12px; font-size: 14px;"></div>
+                        </div>
+                    `;
+                } else {
+                    reviewFormHtml = `
+                        <div class="review-form-container" id="reviewForm" style="display: block;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-secondary);">⭐ У вас пока нет завершенных бронирований этой квартиры.<br>После проживания вы сможете оставить отзыв.</div>
+                        </div>
+                    `;
+                }
+            }
+            
+            container.innerHTML = `
+                <div class="apartment-card">
+                    ${galleryHtml}
+                    <div class="apartment-info">
+                        <div>
+                            <div class="apartment-header">
+                                <h1>${escapeHtml(apt.address)}</h1>
+                                <div class="address">📍 ${escapeHtml(apt.cityName)}, ${escapeHtml(apt.address)}</div>
+                                <div class="price-value">${apt.price.toLocaleString()} ₽ <small>/ сутки</small></div>
+                                ${apt.deposit ? `<div style="font-size: 18px; color: var(--text-secondary);">💰 Залог: ${apt.deposit.toLocaleString()} ₽</div>` : ''}
+                            </div>
+                            <div class="features">
+                                <div class="feature"><span class="feature-icon">📐</span><span>${apt.area} м²</span></div>
+                                <div class="feature"><span class="feature-icon">🛏️</span><span>${apt.rooms} комнаты</span></div>
+                                <div class="feature"><span class="feature-icon">🏢</span><span>${apt.floor || '?'} / ${apt.totalFloors || '?'} этаж</span></div>
+                                <div class="feature"><span class="feature-icon">🛠️</span><span>${apt.renovation || 'Обычный'}</span></div>
+                                <div class="feature"><span class="feature-icon">📅</span><span>Мин. срок: ${apt.minRentDays} суток</span></div>
+                            </div>
+                            <div class="section">
+                                <h3 class="section-title">📝 Описание</h3>
+                                <div class="description">${escapeHtml(apt.description || 'Уютная квартира со всем необходимым для комфортного проживания.')}</div>
+                            </div>
+                            ${amenities.length > 0 ? `
+                                <div class="section">
+                                    <h3 class="section-title">✨ Удобства</h3>
+                                    <div class="amenities">${amenities.map(a => `<div class="amenity">${a}</div>`).join('')}</div>
+                                </div>
+                            ` : ''}
+                            <div class="section">
+                                <h3 class="section-title">📋 Правила проживания</h3>
+                                <div class="rules">${rules.map(r => `<div class="rule ${r.allowed ? 'allowed' : 'not-allowed'}"><span class="rule-icon">${r.icon}</span> ${r.text}</div>`).join('')}</div>
+                            </div>
+                            <div class="section">
+                                <h3 class="section-title">👤 Хозяин квартиры</h3>
+                                <div class="landlord-card">
+                                    <div class="landlord-info">
+                                        <div class="landlord-avatar">${apt.landlordName?.charAt(0) || 'В'}</div>
+                                        <div>
+                                            <h3 style="font-size: 18px; color: var(--text-primary);">${escapeHtml(apt.landlordName || 'Владелец')}</h3>
+                                            <p style="color: var(--text-secondary); font-size: 14px;">На сайте с 2024 года</p>
+                                        </div>
+                                    </div>
+                                    <button class="contact-btn" onclick="contactLandlord('${apt.landlordPhone}', '${apt.landlordEmail}')">📞 Связаться</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="calendarContainer"></div>
+                    </div>
+                    <button class="booking-btn" onclick="bookApartment()">🏠 Забронировать</button>
+                    
+                    <div class="reviews-section">
+                        <div class="reviews-header">
+                            <h3 class="section-title" style="margin-bottom: 0;">📝 Отзывы и рейтинг</h3>
+                            <div class="rating-summary">
+                                <div class="average-rating" id="avgRating">${currentRating.averageRating?.toFixed(1) || '0.0'}</div>
+                                <div class="stars-static" id="starsStatic">${renderStaticStars(currentRating.averageRating || 0)}</div>
+                                <div class="reviews-count" style="color: var(--text-secondary);">${currentRating.totalReviews || 0} отзывов</div>
+                            </div>
+                        </div>
+                        ${reviewFormHtml}
+                        <div id="reviewsList" style="display: flex; flex-direction: column; gap: 20px;">${renderReviews()}</div>
+                    </div>
+                </div>
+            `;
+            
+            renderCalendar();
+            if (token && completedBookings.length > 0) {
+                initStarRating();
+                const submitBtn = document.getElementById('submitReviewBtn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', submitReview);
+                }
+                const bookingSelect = document.getElementById('bookingSelect');
+                if (bookingSelect) {
+                    bookingSelect.addEventListener('change', (e) => {
+                        selectedBookingId = parseInt(e.target.value);
+                    });
+                }
+            }
+        }
+        
+        async function loadApartment() {
+            const container = document.getElementById('apartmentContent');
+            container.innerHTML = '<div class="loader">Загрузка квартиры...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/Apartments/${apartmentId}`);
+                if (!response.ok) throw new Error('Квартира не найдена');
+                
+                apartmentData = await response.json();
+                await loadBusyDates();
+                await loadReviewsAndRating();
+                await loadCompletedBookings();
+                renderApartment();
+            } catch (error) {
+                console.error('Ошибка:', error);
+                container.innerHTML = `<div class="apartment-card" style="padding:60px;text-align:center;"><h2 style="color:#dc2626;">❌ Квартира не найдена</h2><p style="margin-top:20px;">Проверьте правильность ссылки</p><a href="/" style="display:inline-block;margin-top:30px;padding:12px 24px;background:var(--gradient-fire);border-radius:60px;color:#0D2744;text-decoration:none;">На главную</a></div>`;
+            }
+        }
+        
+        loadApartment();
+        
+        window.changeMonth = changeMonth;
+        window.selectDate = selectDate;
+        window.resetMainPhoto = resetMainPhoto;
+        window.setMainPhoto = setMainPhoto;
+        window.contactLandlord = contactLandlord;
+        window.bookApartment = bookApartment;
+        window.logout = logout;
+    </script>
+</body>
+</html>

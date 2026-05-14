@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arenda | Редактирование квартиры</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* --- ПАЛИТРА (Tangaroa + Firebrick) --- */
+        :root {
+            --tangaroa: #0D2744;
+            --wedgewood: #53728A;
+            --shipcove: #7691AD;
+            --spindle: #B9CFDD;
+            --firebrick: #FF929A;
+            --firebrick-hover: #e07a83;
+            --white: #FFFFFF;
+            --text-dark: #1a2a3a;
+            --text-light: #6a7f8f;
+            --shadow-sm: 0 8px 20px rgba(13, 39, 68, 0.06);
+            --shadow-md: 0 12px 28px rgba(13, 39, 68, 0.1);
+            --shadow-lg: 0 20px 35px -10px rgba(13, 39, 68, 0.15);
+            --gradient-fire: linear-gradient(135deg, #FF929A 0%, #f07a83 100%);
+            
+            /* Светлая тема */
+            --bg-body: #B9CFDD;
+            --bg-gradient-start: #d4e5f0;
+            --bg-gradient-mid: #B9CFDD;
+            --bg-gradient-end: #a8c0ce;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 146, 154, 0.25);
+            --text-primary: #1a2a3a;
+            --text-secondary: #6a7f8f;
+            --input-bg: #f9fafb;
+            --input-border: #e5e7eb;
+            --input-focus: #FF929A;
+            --checkbox-accent: #0D2744;
+            --sun-icon-color: #B9CFDD;
+            --moon-icon-color: #B9CFDD;
+            --header-bg: rgba(13, 39, 68, 0.85);
+            --header-text: rgba(185, 207, 221, 0.9);
+            --header-border: rgba(255, 255, 255, 0.1);
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #B9CFDD 100%);
+            --select-text: #1a2a3a;
+            --select-option-bg: #ffffff;
+            --select-border: #e5e7eb;
+            --photos-section-bg: rgba(0,0,0,0.03);
+            --photo-upload-bg: #ffffff;
+        }
+        
+        /* Тёмная тема */
+        body.dark {
+            --bg-body: #0D2744;
+            --bg-gradient-start: #1a3a5a;
+            --bg-gradient-mid: #0D2744;
+            --bg-gradient-end: #06152a;
+            --card-bg: rgba(58, 90, 122, 0.95);
+            --card-border: rgba(255, 146, 154, 0.35);
+            --text-primary: #FFFFFF;
+            --text-secondary: #c0d0e0;
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.2);
+            --input-focus: #FF929A;
+            --checkbox-accent: #FF929A;
+            --sun-icon-color: #0D2744;
+            --moon-icon-color: #0D2744;
+            --header-bg: rgba(185, 207, 221, 0.95);
+            --header-text: #0D2744;
+            --header-border: rgba(13, 39, 68, 0.15);
+            --logo-gradient: linear-gradient(135deg, #FF929A 0%, #0D2744 100%);
+            --select-text: #c0d0e0;
+            --select-option-bg: #2a3a50;
+            --select-border: rgba(255, 255, 255, 0.2);
+            --photos-section-bg: rgba(255,255,255,0.05);
+            --photo-upload-bg: rgba(255,255,255,0.05);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+        
+        /* Стили для select в тёмной теме */
+        select {
+            color: var(--select-text) !important;
+            background: var(--input-bg) !important;
+            border: 2px solid var(--select-border) !important;
+        }
+        
+        select option {
+            color: var(--select-text) !important;
+            background: var(--select-option-bg) !important;
+        }
+        
+        /* --- ЖИВОЙ ФОН --- */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 40%, var(--bg-gradient-end) 100%);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+        
+        .bg-circle-1 {
+            position: fixed;
+            top: -150px;
+            right: -100px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.25) 0%, rgba(255, 146, 154, 0.05) 60%, rgba(255, 146, 154, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 18s ease-in-out infinite;
+        }
+        
+        .bg-circle-2 {
+            position: fixed;
+            bottom: -120px;
+            left: -80px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(13, 39, 68, 0.15) 0%, rgba(13, 39, 68, 0.05) 60%, rgba(13, 39, 68, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float2 22s ease-in-out infinite;
+        }
+        
+        .bg-circle-3 {
+            position: fixed;
+            top: 40%;
+            left: -50px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(83, 114, 138, 0.2) 0%, rgba(83, 114, 138, 0.05) 60%, rgba(83, 114, 138, 0) 80%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float3 15s ease-in-out infinite;
+        }
+        
+        .bg-circle-4 {
+            position: fixed;
+            bottom: 20%;
+            right: 15%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.2) 0%, rgba(255, 146, 154, 0.02) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float1 25s ease-in-out infinite reverse;
+        }
+        
+        .bg-blob {
+            position: fixed;
+            bottom: 5%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 146, 154, 0.15) 0%, rgba(255, 146, 154, 0) 70%);
+            border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%;
+            z-index: 0;
+            animation: morph 15s ease-in-out infinite;
+        }
+        
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(13, 39, 68, 0.08) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+        
+        .bg-grid-diagonal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(45deg, rgba(13, 39, 68, 0.05) 0px, rgba(13, 39, 68, 0.05) 1px, transparent 1px, transparent 30px);
+            z-index: 0;
+        }
+        
+        body.dark .bg-grid {
+            background-image: 
+                linear-gradient(rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(185, 207, 221, 0.1) 1.5px, transparent 1.5px);
+        }
+        
+        body.dark .bg-grid-diagonal {
+            background-image: repeating-linear-gradient(45deg, rgba(185, 207, 221, 0.08) 0px, rgba(185, 207, 221, 0.08) 1px, transparent 1px, transparent 30px);
+        }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -20px) scale(1.05); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.08); }
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 40px); }
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%; }
+            50% { border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%; }
+        }
+        
+        /* --- ШАПКА (НЕ ФИКСИРОВАННАЯ) --- */
+        .header {
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 80px;
+            padding: 10px 30px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--header-border);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo { 
+            font-size: 28px; 
+            font-weight: 800; 
+            background: var(--logo-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav { display: flex; gap: 20px; align-items: center; }
+        .nav a { color: var(--header-text); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+        .nav a:hover { color: var(--firebrick); }
+        
+        /* --- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ --- */
+        .theme-switch {
+            display: flex;
+            gap: 4px;
+            background: rgba(13, 39, 68, 0.15);
+            border-radius: 60px;
+            padding: 4px;
+        }
+        
+        body.dark .theme-switch {
+            background: rgba(185, 207, 221, 0.2);
+        }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+        }
+        
+        .theme-btn.light { color: var(--sun-icon-color); background: transparent; }
+        .theme-btn.dark { color: var(--moon-icon-color); background: transparent; }
+        .theme-btn.light.active { background: var(--gradient-fire); color: #0D2744; }
+        .theme-btn.dark.active { background: var(--gradient-fire); color: #0D2744; }
+        
+        /* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .form-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            padding: 40px;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+        
+        .form-card h1 {
+            font-size: 28px;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 16px;
+            font-size: 15px;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            background: var(--card-bg);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--checkbox-accent);
+        }
+        
+        .checkbox-item label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .photos-section {
+            background: var(--photos-section-bg);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .photos-section h3 {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+        
+        .photo-upload-area {
+            border: 2px dashed var(--input-border);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--photo-upload-bg);
+        }
+        
+        .photo-upload-area:hover {
+            border-color: var(--input-focus);
+            background: var(--input-bg);
+        }
+        
+        .photo-upload-area input {
+            display: none;
+        }
+        
+        .photo-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--input-border);
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-item .remove-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .submit-btn, .cancel-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn {
+            background: var(--gradient-fire);
+            color: #0D2744;
+            box-shadow: 0 6px 20px rgba(255, 146, 154, 0.3);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(255, 146, 154, 0.5);
+        }
+        
+        .cancel-btn {
+            background: var(--input-border);
+            color: var(--text-secondary);
+        }
+        
+        .cancel-btn:hover {
+            background: var(--input-focus);
+            color: #0D2744;
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 60px;
+            background: var(--card-bg);
+            border-radius: 32px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            border: 1px solid var(--card-border);
+        }
+        
+        @media (max-width: 640px) {
+            body { padding: 16px; }
+            .header { padding: 8px 20px; margin-bottom: 20px; }
+            .right-section { gap: 10px; }
+            .nav a { margin-right: 12px; font-size: 14px; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+            .form-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+    <div class="bg-circle-3"></div>
+    <div class="bg-circle-4"></div>
+    <div class="bg-blob"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-grid-diagonal"></div>
+    
+    <div class="header">
+        <a href="/" class="logo">✦ Arenda</a>
+        <div class="right-section">
+            <div class="nav" id="nav"></div>
+            <div class="theme-switch">
+                <button class="theme-btn light active" id="lightModeBtn">☼</button>
+                <button class="theme-btn dark" id="darkModeBtn">☽</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div id="formContainer" class="form-card">
+            <div class="loader">Загрузка данных...</div>
+        </div>
+    </div>
+    
+    <script>
+        // --- ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ---
+        const lightModeBtn = document.getElementById('lightModeBtn');
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        
+        function updateThemeButtons(theme) {
+            if (theme === 'dark') {
+                lightModeBtn.classList.remove('active');
+                darkModeBtn.classList.add('active');
+            } else {
+                lightModeBtn.classList.add('active');
+                darkModeBtn.classList.remove('active');
+            }
+        }
+        
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThemeButtons('dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThemeButtons('light');
+            }
+        }
+        
+        lightModeBtn.addEventListener('click', () => setTheme('light'));
+        darkModeBtn.addEventListener('click', () => setTheme('dark'));
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            updateThemeButtons('dark');
+        } else {
+            updateThemeButtons('light');
+        }
+        
+        const API_URL = 'https://localhost:7151/api';
+        const BACKEND_URL = 'https://localhost:7151';
+        
+        function renderNav() {
+            const nav = document.getElementById('nav');
+            const token = localStorage.getItem('token');
+            const userName = localStorage.getItem('userName');
+            
+            if (token && userName) {
+                nav.innerHTML = `
+                    <a href="/">Поиск</a>
+                    <a href="/profile/">👤 Профиль</a>
+                    <button onclick="logout()" style="background: none; border: 1px solid var(--header-border); padding: 8px 20px; border-radius: 40px; color: var(--header-text); cursor: pointer;">Выйти</button>
+                `;
+            } else {
+                nav.innerHTML = `<a href="/">Поиск</a><a href="/login/">Вход</a><a href="/register/" class="btn" style="padding: 8px 20px; background: var(--gradient-fire); border-radius: 60px; color: #0D2744; text-decoration: none;">Регистрация</a>`;
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+        
+        renderNav();
+        
+        const token = localStorage.getItem('token')?.trim();
+        
+        // Получаем ID квартиры из URL (Django передаёт как {{ apartment_id }})
+        const apartmentId = {{ apartment_id }};
+        
+        if (!token) window.location.href = '/login/';
+        if (!apartmentId) {
+            document.getElementById('formContainer').innerHTML = '<div class="loader" style="color:#dc2626;">❌ ID квартиры не передан</div>';
+        }
+        
+        let existingPhotos = [];
+        let newFiles = [];
+        let citiesList = [];
+        
+        // === ЗАГРУЗКА ГОРОДОВ ИЗ БД ===
+        async function loadCities() {
+            try {
+                const response = await fetch(`${API_URL}/Cities`);
+                if (response.ok) {
+                    citiesList = await response.json();
+                    console.log('Города загружены из БД:', citiesList.length);
+                } else {
+                    setFallbackCities();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки городов:', error);
+                setFallbackCities();
+            }
+        }
+        
+        function setFallbackCities() {
+            citiesList = [
+                { id: 1, name: 'Москва' },
+                { id: 2, name: 'Санкт-Петербург' },
+                { id: 3, name: 'Казань' },
+                { id: 4, name: 'Сочи' }
+            ];
+        }
+        
+        function getCityOptions(selectedCityId) {
+            return citiesList.map(city => 
+                `<option value="${city.id}" ${selectedCityId === city.id ? 'selected' : ''}>${escapeHtml(city.name)}</option>`
+            ).join('');
+        }
+        
+        async function loadApartment() {
+            try {
+                const response = await fetch(`${API_URL}/Apartments/${apartmentId}`);
+                if (!response.ok) throw new Error('Квартира не найдена');
+                const apt = await response.json();
+                
+                existingPhotos = apt.photos || [];
+                
+                // Ждём загрузки городов
+                await loadCities();
+                
+                const cityOptions = getCityOptions(apt.cityId);
+                
+                document.getElementById('formContainer').innerHTML = `
+                    <h1>✏️ Редактирование квартиры</h1>
+                    <form id="apartmentForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Город *</label>
+                                <select id="cityId" required>
+                                    <option value="">Выберите город</option>
+                                    ${cityOptions}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Адрес *</label>
+                                <input type="text" id="address" value="${escapeHtml(apt.address)}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Описание</label>
+                            <textarea id="description" rows="3">${escapeHtml(apt.description || '')}</textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Площадь (м²) *</label>
+                                <input type="number" id="area" value="${apt.area}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Цена (₽/сутки) *</label>
+                                <input type="number" id="price" value="${apt.price}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Комнат *</label>
+                                <select id="rooms" required>
+                                    <option value="1" ${apt.rooms === 1 ? 'selected' : ''}>1 комната</option>
+                                    <option value="2" ${apt.rooms === 2 ? 'selected' : ''}>2 комнаты</option>
+                                    <option value="3" ${apt.rooms === 3 ? 'selected' : ''}>3 комнаты</option>
+                                    <option value="4" ${apt.rooms >= 4 ? 'selected' : ''}>4+ комнаты</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Этаж</label>
+                                <input type="number" id="floor" value="${apt.floor || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>Этажность дома</label>
+                                <input type="number" id="totalFloors" value="${apt.totalFloors || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>Ремонт</label>
+                                <select id="renovation">
+                                    <option value="">Не выбран</option>
+                                    <option value="Обычный" ${apt.renovation === 'Обычный' ? 'selected' : ''}>Обычный</option>
+                                    <option value="Хороший" ${apt.renovation === 'Хороший' ? 'selected' : ''}>Хороший</option>
+                                    <option value="Евро" ${apt.renovation === 'Евро' ? 'selected' : ''}>Евро</option>
+                                    <option value="Дизайнерский" ${apt.renovation === 'Дизайнерский' ? 'selected' : ''}>Дизайнерский</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Удобства</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item"><input type="checkbox" id="furniture" ${apt.furniture ? 'checked' : ''}> <label>Мебель</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="appliances" ${apt.appliances ? 'checked' : ''}> <label>Техника</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="internet" ${apt.internet ? 'checked' : ''}> <label>Интернет</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="parking" ${apt.parking ? 'checked' : ''}> <label>Парковка</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="elevator" ${apt.elevator ? 'checked' : ''}> <label>Лифт</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="balcony" ${apt.balcony ? 'checked' : ''}> <label>Балкон</label></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Правила проживания</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item"><input type="checkbox" id="petsAllowed" ${apt.petsAllowed ? 'checked' : ''}> <label>Можно с животными</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="childrenAllowed" ${apt.childrenAllowed ? 'checked' : ''}> <label>Можно с детьми</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="smokingAllowed" ${apt.smokingAllowed ? 'checked' : ''}> <label>Можно курить</label></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Мин. срок аренды (сутки)</label>
+                                <input type="number" id="minRentDays" value="${apt.minRentDays}">
+                            </div>
+                            <div class="form-group">
+                                <label>Залог (₽)</label>
+                                <input type="number" id="deposit" value="${apt.deposit || ''}">
+                            </div>
+                        </div>
+                        
+                        <div class="photos-section">
+                            <h3>📸 Фотографии квартиры</h3>
+                            <div id="existingPhotos" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;"></div>
+                            <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
+                                <input type="file" id="photoInput" multiple accept="image/*" style="display: none;">
+                                <div>📷 Добавить новые фото</div>
+                                <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Можно выбрать несколько файлов</div>
+                            </div>
+                            <div id="photoPreview" class="photo-preview"></div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="submit-btn">💾 Сохранить изменения</button>
+                            <a href="/my-apartments/" class="cancel-btn">Отмена</a>
+                        </div>
+                    </form>
+                `;
+                
+                // Показываем существующие фото
+                const existingContainer = document.getElementById('existingPhotos');
+                if (existingContainer && existingPhotos.length > 0) {
+                    existingPhotos.forEach((photo, index) => {
+                        const photoUrl = `${BACKEND_URL}${photo.url}`;
+                        const div = document.createElement('div');
+                        div.className = 'preview-item';
+                        div.innerHTML = `
+                            <img src="${photoUrl}" alt="Фото">
+                            <div class="remove-btn" onclick="removeExistingPhoto(${index})">✕</div>
+                        `;
+                        existingContainer.appendChild(div);
+                    });
+                }
+                
+                // Настраиваем загрузку новых фото
+                const photoInput = document.getElementById('photoInput');
+                if (photoInput) {
+                    photoInput.addEventListener('change', function(e) {
+                        const files = Array.from(e.target.files);
+                        newFiles = [...newFiles, ...files];
+                        updatePhotoPreview();
+                    });
+                }
+                
+                const form = document.getElementById('apartmentForm');
+                if (form) {
+                    form.addEventListener('submit', updateApartment);
+                }
+                
+            } catch (error) {
+                console.error('Ошибка загрузки:', error);
+                document.getElementById('formContainer').innerHTML = `<div class="loader" style="color:#dc2626;">❌ Ошибка загрузки квартиры: ${error.message}</div>`;
+            }
+        }
+        
+        function updatePhotoPreview() {
+            const container = document.getElementById('photoPreview');
+            if (!container) return;
+            container.innerHTML = '';
+            newFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="preview">
+                        <div class="remove-btn" onclick="removeNewPhoto(${index})">✕</div>
+                    `;
+                    container.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function removeExistingPhoto(index) {
+            existingPhotos.splice(index, 1);
+            const container = document.getElementById('existingPhotos');
+            if (!container) return;
+            container.innerHTML = '';
+            existingPhotos.forEach((photo, i) => {
+                const photoUrl = `${BACKEND_URL}${photo.url}`;
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `
+                    <img src="${photoUrl}" alt="Фото">
+                    <div class="remove-btn" onclick="removeExistingPhoto(${i})">✕</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        function removeNewPhoto(index) {
+            newFiles.splice(index, 1);
+            updatePhotoPreview();
+        }
+        
+        async function uploadNewPhotos(apartmentId) {
+            if (newFiles.length === 0) return [];
+            
+            const formData = new FormData();
+            newFiles.forEach(file => {
+                formData.append('photos', file);
+            });
+            
+            try {
+                const response = await fetch(`${API_URL}/Apartments/${apartmentId}/photos`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.photos || [];
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки фото:', error);
+            }
+            return [];
+        }
+        
+        async function updateApartment(e) {
+            e.preventDefault();
+            
+            const formData = {
+                cityId: parseInt(document.getElementById('cityId').value),
+                address: document.getElementById('address').value,
+                description: document.getElementById('description').value,
+                area: parseInt(document.getElementById('area').value),
+                price: parseFloat(document.getElementById('price').value),
+                rooms: parseInt(document.getElementById('rooms').value),
+                floor: document.getElementById('floor').value ? parseInt(document.getElementById('floor').value) : null,
+                totalFloors: document.getElementById('totalFloors').value ? parseInt(document.getElementById('totalFloors').value) : null,
+                renovation: document.getElementById('renovation').value || null,
+                furniture: document.getElementById('furniture').checked,
+                appliances: document.getElementById('appliances').checked,
+                internet: document.getElementById('internet').checked,
+                parking: document.getElementById('parking').checked,
+                elevator: document.getElementById('elevator').checked,
+                balcony: document.getElementById('balcony').checked,
+                petsAllowed: document.getElementById('petsAllowed').checked,
+                childrenAllowed: document.getElementById('childrenAllowed').checked,
+                smokingAllowed: document.getElementById('smokingAllowed').checked,
+                minRentDays: parseInt(document.getElementById('minRentDays').value),
+                deposit: document.getElementById('deposit').value ? parseFloat(document.getElementById('deposit').value) : null
+            };
+            
+            const btn = document.querySelector('.submit-btn');
+            btn.textContent = 'Сохранение...';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_URL}/Apartments/${apartmentId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    if (newFiles.length > 0) {
+                        await uploadNewPhotos(apartmentId);
+                    }
+                    alert('✅ Квартира успешно обновлена!');
+                    window.location.href = '/my-apartments/';
+                } else {
+                    const data = await response.json();
+                    alert('❌ Ошибка: ' + (data.message || 'Не удалось обновить'));
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('❌ Ошибка соединения с сервером');
+            } finally {
+                btn.textContent = '💾 Сохранить изменения';
+                btn.disabled = false;
+            }
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        loadApartment();
+        
+        window.removeExistingPhoto = removeExistingPhoto;
+        window.removeNewPhoto = removeNewPhoto;
+        window.logout = logout;
+    </script>
+</body>
+</html>
