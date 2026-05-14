@@ -155,10 +155,7 @@ source env/bin/activate
 **Шаг 4. Установите зависимости**
 
 ```bash
-pip install django
-```
-```bash
-pip install requests
+pip install -r requirements.txt
 ```
 
 **Шаг 5. Запустите сервер Django**
@@ -176,7 +173,7 @@ python manage.py runserver
 
 | Проблема | Причина | Решение |
 |----------|---------|---------|
-| `address already in use` | Порт 7151 занят | остановить проект бэкенда | findstr :7151` → `taskkill /PID <PID> /F` |
+| `address already in use` | Порт 7151 занят | Остановить проект бэкенда или найти процесс через `netstat -ano \| findstr :7151` и завершить его командой `taskkill /PID <PID> /F` |
 | `failed to push some refs` | В репозитории уже есть файлы | `git pull --allow-unrelated-histories` |
 | Фото не грузятся | Не настроена статика в .NET | Добавить `UseStaticFiles` для папки `uploads` |
 | Ошибка 400 при регистрации | Пароль короче 6 символов | Использовать пароль длиной 6+ символов |
@@ -205,6 +202,7 @@ python manage.py runserver
 - Для проверки API используйте Swagger: `https://localhost:7151/swagger`
 - Тестовый пользователь создаётся через POST `/api/Auth/register`
 - Загрузка фото работает только при запуске через `dotnet run` (не через Visual Studio)
+- Для мониторинга производительности backend записывает в консоль время обработки HTTP-запросов.
 
 **Структура репозитория:**
 - `backend/ArendaAPI/` — бэкенд на C#
